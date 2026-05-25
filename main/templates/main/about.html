@@ -1,0 +1,85 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .about-card {
+        background: #1a1a1a;
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid #333;
+    }
+    .about-card h1 {
+        color: #81c784;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+    .about-card p {
+        color: #b0b0b0;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+    }
+    .about-card ul {
+        color: #b0b0b0;
+        margin-left: 1.5rem;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+    }
+    .about-card li {
+        margin-bottom: 0.5rem;
+    }
+    .practice-info {
+        background: #2a2a2a;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-top: 2rem;
+    }
+    .practice-info h3 {
+        color: #ff9800;
+        margin-bottom: 1rem;
+    }
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+    .stat {
+        text-align: center;
+        padding: 1rem;
+        background: #2a2a2a;
+        border-radius: 8px;
+    }
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #81c784;
+    }
+    .stat-label {
+        color: #808080;
+    }
+</style>
+
+<div class="about-card">
+    <h1>О Шахматной академии</h1>
+
+    <p><strong>Шахматная академия</strong> — это образовательная онлайн-платформа, созданная для обучения шахматам, повышения мастерства и участия в турнирах. Мы объединяем любителей и профессионалов, предоставляя качественный контент, доступный каждому.</p>
+
+    <p>Наша цель — популяризация шахмат среди детей и взрослых, развитие логического мышления, стратегического планирования и спортивного азарта. Мы верим, что шахматы — это не просто игра, а мощный инструмент для развития интеллекта.</p>
+
+    <p><strong>На платформе вы найдете:</strong></p>
+    <ul>
+
+        <li>🏆 Регулярные онлайн-турниры</li>
+        <li>👨‍🏫 Индивидуальные занятия с тренерами</li>
+        <li>📊 Аналитику прогресса и персональные рекомендации</li>
+        <li>💬 Чат с администратором</li>
+        <li>🎓 Сертификаты и дипломы после завершения соревнований</li>
+    </ul>
+
+    <p>Присоединяйтесь к нам, чтобы делать ходы, побеждать и расти вместе с Шахматной академией! ♜</p>
+
+
+
+
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .edit-form {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #1a1a1a;
+        padding: 2rem;
+        border-radius: 16px;
+        border: 1px solid #333;
+    }
+    .edit-form h2 {
+        color: #81c784;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    .form-group label {
+        display: block;
+        color: #b0b0b0;
+        margin-bottom: 0.5rem;
+    }
+    .form-group input, .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        background: #2a2a2a;
+        border: 2px solid #404040;
+        border-radius: 8px;
+        color: #fff;
+    }
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+    .btn-block {
+        width: 100%;
+    }
+    .btn-cancel {
+        display: block;
+        text-align: center;
+        margin-top: 1rem;
+        text-decoration: none;
+    }
+</style>
+
+<div class="edit-form">
+    <h2>✏️ Редактирование профиля</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Полное имя</label>
+            {{ form.full_name }}
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            {{ form.email }}
+        </div>
+        <div class="form-group">
+            <label>Город</label>
+            {{ form.city }}
+        </div>
+        <div class="form-group">
+            <label>Телефон</label>
+            {{ form.phone }}
+        </div>
+        <div class="form-group">
+            <label>О себе</label>
+            {{ form.bio }}
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
+        <a href="{% url 'profile' %}" class="btn btn-danger btn-cancel">Отмена</a>
+    </form>
+</div>
+{% endblock %}

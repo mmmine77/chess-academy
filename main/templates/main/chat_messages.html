@@ -1,0 +1,18 @@
+{% for msg in messages_list %}
+    {% if msg.sender == user %}
+        <div class="message message-sent">
+            <div class="message-info">
+                Вы • {{ msg.created_at|date:"d.m.Y H:i" }}
+                <a href="{% url 'delete_message' msg.id %}" class="delete-msg" onclick="return confirm('Удалить сообщение?')">✕</a>
+            </div>
+            <div class="message-text">{{ msg.message }}</div>
+        </div>
+    {% else %}
+        <div class="message message-received">
+            <div class="message-info">
+                {{ msg.sender.full_name|default:msg.sender.username }} • {{ msg.created_at|date:"d.m.Y H:i" }}
+            </div>
+            <div class="message-text">{{ msg.message }}</div>
+        </div>
+    {% endif %}
+{% endfor %}

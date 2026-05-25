@@ -1,0 +1,100 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .trainer-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #1a1a1a;
+        padding: 2rem;
+        border-radius: 16px;
+    }
+    .trainer-container h1 {
+        color: #81c784;
+        margin-bottom: 1rem;
+    }
+    .trainer-photo {
+        max-width: 200px;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+    .trainer-info p {
+        margin-bottom: 0.5rem;
+        color: #b0b0b0;
+    }
+    .trainer-info strong {
+        color: #e0e0e0;
+    }
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+    .btn-back, .btn-edit, .btn-delete {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+    .btn-back {
+        background: #81c784;
+        color: #000;
+    }
+    .btn-back:hover {
+        background: #6bb86e;
+    }
+    .btn-edit {
+        background: #2196f3;
+        color: #fff;
+    }
+    .btn-edit:hover {
+        background: #1976d2;
+    }
+    .btn-delete {
+        background: #ff4444;
+        color: #fff;
+    }
+    .btn-delete:hover {
+        background: #cc0000;
+    }
+
+    @media (max-width: 768px) {
+        .button-group {
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .btn-back, .btn-edit, .btn-delete {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="trainer-container">
+    <h1>{{ trainer.user.full_name|default:trainer.user.username }}</h1>
+
+    {% if trainer.photo %}
+        <img src="{{ trainer.photo.url }}" class="trainer-photo" alt="{{ trainer.user.full_name }}">
+    {% endif %}
+
+    <div class="trainer-info">
+        <p><strong>Звание:</strong> {{ trainer.title|default:"Не указано" }}</p>
+        <p><strong>Специализация:</strong> {{ trainer.specialization|default:"Не указана" }}</p>
+        <p><strong>Опыт:</strong> {{ trainer.experience|default:"0" }} лет</p>
+        <p><strong>Цена:</strong> {{ trainer.price_per_hour|default:"1000" }} ₽ / час</p>
+        <p><strong>О себе:</strong> {{ trainer.about|default:"Нет информации" }}</p>
+        <p><strong>Достижения:</strong> {{ trainer.achievements|default:"Нет информации" }}</p>
+    </div>
+
+    <div class="button-group">
+        <a href="{% url 'trainers_list' %}" class="btn-back">← Назад к тренерам</a>
+
+        {% if user.role == 'admin' %}
+            <a href="{% url 'trainer_edit' trainer.id %}" class="btn-edit">✏️ Редактировать</a>
+            <a href="{% url 'trainer_delete' trainer.id %}" class="btn-delete" onclick="return confirm('Удалить тренера?')">🗑️ Удалить</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тренеры</title>
+</head>
+<body>
+    <h1>Список тренеров</h1>
+    {% for trainer in trainers %}
+        <p>{{ trainer.user.full_name }} - {{ trainer.specialization }}</p>
+    {% endfor %}
+</body>
+</html>

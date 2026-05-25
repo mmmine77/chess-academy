@@ -1,0 +1,97 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .users-list {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .user-item {
+        background: #1a1a1a;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 0.8rem;
+        border: 1px solid #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: 0.3s;
+    }
+    .user-item:hover {
+        border-color: #81c784;
+    }
+    .user-name {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #81c784;
+    }
+    .user-last-message {
+        font-size: 0.85rem;
+        color: #888;
+        margin-top: 0.3rem;
+    }
+    .unread-badge {
+        background: #ff4444;
+        color: white;
+        padding: 0.2rem 0.5rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: bold;
+    }
+    .empty-chat {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+    }
+
+    @media (max-width: 768px) {
+        .users-list {
+            margin: 0 0.5rem;
+        }
+        .user-item {
+            padding: 0.8rem;
+        }
+        .user-name {
+            font-size: 1rem;
+        }
+        .user-last-message {
+            font-size: 0.75rem;
+        }
+        h1 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
+<h1 style="color:#81c784; margin-bottom: 2rem;">💬 Диалоги</h1>
+
+{% if users %}
+    <div class="users-list">
+        {% for user in users %}
+        <a href="{% url 'chat_dialog' user.id %}" style="text-decoration: none;">
+            <div class="user-item">
+                <div>
+                    <div class="user-name">{{ user.full_name|default:user.username }}</div>
+                    <div class="user-last-message">
+                        {% if user.last_message %}
+                            {{ user.last_message|truncatechars:50 }}
+                        {% else %}
+                            Нет сообщений
+                        {% endif %}
+                    </div>
+                </div>
+                {% if user.unread_count > 0 %}
+                    <div class="unread-badge">{{ user.unread_count }}</div>
+                {% endif %}
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-chat">
+        <p>📭 Нет диалогов</p>
+        <p>Когда пользователи напишут вам, они появятся здесь</p>
+    </div>
+{% endif %}
+{% endblock %}

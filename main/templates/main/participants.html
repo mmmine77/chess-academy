@@ -1,0 +1,98 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .participants-card {
+        max-width: 900px;
+        margin: 0 auto;
+        background: #1a1a1a;
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid #333;
+    }
+    .participants-card h2 {
+        color: #81c784;
+        margin-bottom: 1rem;
+    }
+    .participants-list {
+        list-style: none;
+        margin-top: 1.5rem;
+    }
+    .participants-list li {
+        background: #2a2a2a;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .participant-name {
+        font-weight: bold;
+        color: #fff;
+    }
+    .participant-email {
+        color: #808080;
+        font-size: 0.9rem;
+    }
+    .count {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #404040;
+        color: #81c784;
+        font-weight: bold;
+    }
+    .award-form {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .award-form input {
+        padding: 0.5rem;
+        background: #1a1a1a;
+        border: 1px solid #404040;
+        border-radius: 4px;
+        color: #fff;
+    }
+    .award-form button {
+        padding: 0.5rem 1rem;
+    }
+</style>
+
+<div class="participants-card">
+    <h2>👥 Участники турнира "{{ tournament.name }}"</h2>
+    <p>📅 {{ tournament.date }} | ⏰ {{ tournament.time|time:"H:i" }} | 📍 {{ tournament.location }}</p>
+
+    <ul class="participants-list">
+        {% for participant in participants %}
+        <li>
+            <div>
+                <div class="participant-name">{{ participant.full_name|default:participant.username }}</div>
+                <div class="participant-email">{{ participant.email|default:"Email не указан" }}</div>
+                <div class="participant-email">🏆 Рейтинг: {{ participant.rating|default:"-" }}</div>
+            </div>
+            <div>
+                {% if not participant.is_banned %}
+                <form method="POST" action="{% url 'award_tournament_achievement' tournament.id participant.id %}" class="award-form">
+                    {% csrf_token %}
+                    <input type="text" name="name" placeholder="Название достижения" required>
+                    <input type="text" name="description" placeholder="Описание" required>
+                    <button type="submit" class="btn btn-primary">🏆 Наградить</button>
+                </form>
+                {% else %}
+                <span style="color:#ff4444;">⛔ Забанен</span>
+                {% endif %}
+            </div>
+        </li>
+        {% empty %}
+        <li style="text-align:center; color:#666;">😢 Пока нет участников</li>
+        {% endfor %}
+    </ul>
+
+    <div class="count">📊 Всего участников: {{ participants|length }}</div>
+    <a href="{% url 'tournaments' %}" class="btn btn-primary" style="display:inline-block; margin-top:1rem; text-decoration:none;">← Назад к турнирам</a>
+</div>
+{% endblock %}

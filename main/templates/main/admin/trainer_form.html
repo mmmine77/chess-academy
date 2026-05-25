@@ -1,0 +1,126 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .form-container {
+        max-width: 700px;
+        margin: 0 auto;
+        background: #1a1a1a;
+        padding: 2rem;
+        border-radius: 16px;
+        border: 1px solid #333;
+    }
+    .form-container h2 {
+        color: #81c784;
+        margin-bottom: 1.5rem;
+    }
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    .form-group label {
+        display: block;
+        color: #b0b0b0;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        background: #2a2a2a;
+        border: 1px solid #404040;
+        border-radius: 8px;
+        color: #fff;
+    }
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+    .form-group input[type="file"] {
+        padding: 0.5rem;
+        background: #2a2a2a;
+    }
+    .btn-submit {
+        background: #81c784;
+        color: #000;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+        margin-top: 1rem;
+        width: 100%;
+    }
+    .btn-submit:hover {
+        background: #6bb86e;
+    }
+    .back-link {
+        display: inline-block;
+        margin-top: 1rem;
+        color: #81c784;
+        text-decoration: none;
+    }
+    .helptext {
+        color: #666;
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+    .current-photo {
+        margin-bottom: 0.5rem;
+    }
+    .current-photo img {
+        max-width: 150px;
+        border-radius: 8px;
+    }
+</style>
+
+<div class="form-container">
+    <h2>{{ title }}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- ФИО ТРЕНЕРА -->
+        <div class="form-group">
+            <label>ФИО тренера *</label>
+            <input type="text" name="full_name" value="{{ trainer.user.full_name|default:'' }}" required class="form-control" placeholder="Иванов Иван Иванович">
+            <div class="helptext">Полное имя тренера для отображения на сайте</div>
+        </div>
+
+        <!-- Остальные поля из формы (исключаем user, is_available, photo) -->
+        {% for field in form %}
+            {% if field.name != 'user' and field.name != 'is_available' and field.name != 'photo' %}
+            <div class="form-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <div class="helptext">{{ field.help_text }}</div>
+                {% endif %}
+                {% if field.errors %}
+                    <div class="helptext" style="color: #ff4444;">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% endfor %}
+
+        <!-- ФОТОГРАФИЯ -->
+        <div class="form-group">
+            <label>Фотография</label>
+            {% if trainer and trainer.photo %}
+            <div class="current-photo">
+                <img src="{{ trainer.photo.url }}" alt="Текущее фото">
+            </div>
+            {% endif %}
+            <input type="file" name="photo" accept="image/*">
+            <div class="helptext">Выберите новое фото, чтобы заменить текущее. Просто оставьте пустым, чтобы не менять.</div>
+        </div>
+
+        
+
+        <button type="submit" class="btn-submit">{% if trainer %}Сохранить{% else %}Создать тренера{% endif %}</button>
+    </form>
+    <a href="{% url 'trainers_list' %}" class="back-link">← Назад к списку тренеров</a>
+</div>
+{% endblock %}

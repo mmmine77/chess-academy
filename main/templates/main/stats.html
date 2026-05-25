@@ -1,0 +1,141 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .stats-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .stats-header {
+        background: #1a1a1a;
+        padding: 1.5rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        text-align: center;
+        border: 1px solid #333;
+    }
+    .stats-header h1 {
+        color: #81c784;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    .stats-header p {
+        color: #b0b0b0;
+    }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .stat-card {
+        background: #1a1a1a;
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        border: 1px solid #333;
+        transition: 0.3s;
+    }
+    .stat-card:hover {
+        border-color: #81c784;
+        transform: translateY(-3px);
+    }
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #81c784;
+    }
+    .stat-label {
+        color: #b0b0b0;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+    }
+    .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    .banned-warning {
+        background: #ff444420;
+        border: 1px solid #ff4444;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+    .banned-count {
+        color: #ff8888;
+    }
+    .summary-card {
+        background: #1a1a1a;
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid #333;
+        margin-top: 1rem;
+    }
+    .summary-title {
+        color: #81c784;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #404040;
+        padding-bottom: 0.5rem;
+    }
+</style>
+
+<div class="stats-container">
+    <div class="stats-header">
+        <h1>📊 Статистика сайта</h1>
+        <p>Общая информация о работе шахматного клуба</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-number">{{ total_users }}</div>
+            <div class="stat-label">Всего пользователей</div>
+            {% if banned_users > 0 %}
+                <div class="banned-warning">
+                    ⛔ Забанено: {{ banned_users }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-number">{{ total_tournaments }}</div>
+            <div class="stat-label">Всего турниров</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-number">{{ total_achievements }}</div>
+            <div class="stat-label">Выдано достижений</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">💬</div>
+            <div class="stat-number">{{ total_messages }}</div>
+            <div class="stat-label">Сообщений в чате</div>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="summary-title">📈 Краткая сводка</div>
+        <div style="padding: 1rem;">
+            <p style="color:#b0b0b0; margin-bottom: 0.5rem;">📌 Среднее количество участников на турнир:
+                <strong style="color:#81c784;">
+                    {% if total_tournaments > 0 %}
+                        {% widthratio total_users total_tournaments 1 %}
+                    {% else %}0{% endif %}
+                </strong>
+            </p>
+            <p style="color:#b0b0b0; margin-bottom: 0.5rem;">📌 Среднее количество достижений на пользователя:
+                <strong style="color:#81c784;">
+                    {% if total_users > 0 %}
+                        {% widthratio total_achievements total_users 1 %}
+                    {% else %}0{% endif %}
+                </strong>
+            </p>
+            <p style="color:#b0b0b0;">📌 Активность в чате:
+                <strong style="color:#81c784;">{{ total_messages }}</strong> сообщений
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

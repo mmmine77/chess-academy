@@ -1,0 +1,156 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .chat-container {
+        max-width: 800px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 180px);
+        min-height: 500px;
+    }
+    .chat-header {
+        background: #1a1a1a;
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        text-align: center;
+        border: 1px solid #333;
+    }
+    .chat-header h2 {
+        color: #81c784;
+        font-size: 1.3rem;
+    }
+    .messages-container {
+        background: #1a1a1a;
+        border-radius: 12px;
+        padding: 1rem;
+        flex: 1;
+        overflow-y: auto;
+        border: 1px solid #333;
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+    .message {
+        margin-bottom: 0.8rem;
+        padding: 0.6rem 1rem;
+        border-radius: 16px;
+        max-width: 70%;
+        word-wrap: break-word;
+    }
+    .message-sent {
+        background: #81c784;
+        color: #1a1a1a;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+    }
+    .message-received {
+        background: #2a2a2a;
+        color: #fff;
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+    }
+    .message-info {
+        font-size: 0.65rem;
+        margin-bottom: 0.2rem;
+        opacity: 0.7;
+    }
+    .message-sent .message-info {
+        text-align: right;
+        color: #1a1a1a;
+    }
+    .message-received .message-info {
+        text-align: left;
+        color: #aaa;
+    }
+    .delete-msg {
+        color: #ff4444;
+        text-decoration: none;
+        margin-left: 8px;
+        font-size: 0.7rem;
+    }
+    .send-form {
+        background: #1a1a1a;
+        padding: 0.8rem;
+        border-radius: 12px;
+        border: 1px solid #333;
+    }
+    .send-form textarea {
+        width: 100%;
+        padding: 0.7rem;
+        background: #2a2a2a;
+        border: 1px solid #404040;
+        border-radius: 8px;
+        color: #fff;
+        resize: vertical;
+        font-size: 0.9rem;
+    }
+    .send-form button {
+        margin-top: 0.5rem;
+    }
+    .empty-chat {
+        text-align: center;
+        color: #666;
+        padding: 2rem;
+    }
+</style>
+
+<div class="chat-container">
+    <div class="chat-header">
+        <h2>💬 Чат с администратором</h2>
+    </div>
+
+    <div class="messages-container" id="chat-messages">
+        {% if messages_list %}
+            {% for msg in messages_list %}
+                {% if msg.sender == user %}
+                    <div class="message message-sent">
+                        <div class="message-info">
+                            Вы • {{ msg.created_at|date:"d.m.Y H:i" }}
+                            <a href="{% url 'delete_message' msg.id %}" class="delete-msg" onclick="return confirm('Удалить сообщение?')">✕</a>
+                        </div>
+                        <div class="message-text">{{ msg.message }}</div>
+                    </div>
+                {% else %}
+                    <div class="message message-received">
+                        <div class="message-info">
+                            {{ msg.sender.full_name|default:msg.sender.username }} • {{ msg.created_at|date:"d.m.Y H:i" }}
+                        </div>
+                        <div class="message-text">{{ msg.message }}</div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="empty-chat">
+                <p>📭 Нет сообщений</p>
+                <p>Напишите первое сообщение администратору</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="send-form">
+        <form method="post" id="chat-form">
+            {% csrf_token %}
+            {{ form.message }}
+            <button type="submit" class="btn btn-primary">📨 Отправить</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function scrollToBottom() {
+        var container = document.getElementById('chat-messages');
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
+    }
+
+    window.onload = scrollToBottom;
+
+    document.getElementById('chat-form')?.addEventListener('submit', function() {
+        setTimeout(scrollToBottom, 100);
+    });
+</script>
+{% endblock %}

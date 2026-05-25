@@ -1,0 +1,38 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .news-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+    .news-card {
+        background: #1a1a1a;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #333;
+        position: relative;
+    }
+</style>
+
+<h1 style="color:#81c784;">📰 Новости</h1>
+
+<div class="news-grid">
+    {% for item in news %}
+    <div class="news-card">
+        {% if user.role == 'admin' %}
+        <div class="admin-actions">
+            <a href="{% url 'news_edit' item.id %}" class="btn-icon btn-edit">✏️</a>
+            <a href="{% url 'news_delete' item.id %}" class="btn-icon btn-delete" onclick="return confirm('Удалить новость?')">🗑️</a>
+        </div>
+        {% endif %}
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.content|truncatewords:20 }}</p>
+        <small>{{ item.created_at|date:"d.m.Y" }}</small>
+    </div>
+    {% empty %}
+    <p>Нет новостей</p>
+    {% endfor %}
+</div>
+{% endblock %}

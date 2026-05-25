@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Шахматная академия | {% block title %}Главная{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background: #0f0f0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            max-width: 100%;
+            padding-top: 70px;
+        }
+        html {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+
+        img, video, iframe {
+            max-width: 100%;
+            height: auto;
+        }
+        input, select, textarea, button {
+            max-width: 100%;
+            font-size: 16px;
+        }
+        table, .participants-list, .tournaments-list, .users-list {
+            display: block;
+            overflow-x: auto;
+            width: 100%;
+        }
+        .info-value, .participant-email, .user-email {
+            word-break: break-all;
+            overflow-wrap: break-word;
+        }
+
+        .navbar {
+            background: #1a1a1a;
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            flex: 1;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #81c784;
+            cursor: pointer;
+        }
+        .burger {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #81c784;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: #b0b0b0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.4rem 0.6rem;
+        }
+        .nav-links a:hover {
+            color: #81c784;
+        }
+        .ml-auto {
+            margin-left: auto;
+        }
+
+        .btn {
+            padding: 0.4rem 0.9rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: #81c784;
+            color: #000;
+        }
+        .btn-black {
+            background: #000000;
+            color: #ffffff;
+        }
+        .btn-black:hover {
+            background: #333333;
+        }
+        .btn-danger {
+            background: #ff4444;
+            color: white;
+        }
+        .btn-sm {
+            padding: 0.25rem 0.6rem;
+            font-size: 0.75rem;
+        }
+        .admin-badge {
+            background: #ff9800;
+            color: #1a1a1a;
+            padding: 0.15rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            margin-left: 0.3rem;
+        }
+
+        .footer {
+            background: #0a0a0a;
+            padding: 1rem 1rem 0.8rem;
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 0.8rem;
+        }
+        .footer-col {
+            flex: 1;
+            min-width: 150px;
+        }
+        .footer-col h3 {
+            color: #81c784;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
+        }
+        .footer-col p {
+            font-size: 0.7rem;
+            color: #888;
+            line-height: 1.3;
+        }
+        .footer-col a {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.7rem;
+        }
+        .footer-col a:hover {
+            color: #81c784;
+        }
+        .footer-bottom {
+            border-top: 1px solid #333;
+            margin-top: 0.6rem;
+            padding-top: 0.5rem;
+            text-align: center;
+        }
+        .footer-bottom p {
+            font-size: 0.65rem;
+            color: #555;
+        }
+        .footer-bottom a {
+            color: #81c784;
+            text-decoration: none;
+        }
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+
+        .toast-messages {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            left: 20px;
+            z-index: 1100;
+        }
+        .toast-message {
+            background: #1a1a1a;
+            border-left: 4px solid #81c784;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .admin-panel {
+            background: #2a2a2a;
+            padding: 0.5rem 0.8rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            width: 100%;
+        }
+        .admin-panel span {
+            color: #ff9800;
+            font-size: 0.8rem;
+        }
+        .admin-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .password-field {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-field input {
+            width: 100%;
+            padding: 0.6rem;
+            padding-right: 35px;
+            background: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            color: #fff;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            color: #81c784;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            padding-bottom: 0.3rem;
+        }
+        .tab {
+            flex-shrink: 0;
+            padding: 0.5rem 1rem;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .tab.active {
+            background: #81c784;
+            color: #1a1a1a;
+            border-color: #81c784;
+        }
+
+        .tournaments-grid,
+        .trainers-grid,
+        .lessons-grid,
+        .meetings-grid,
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0.8rem;
+        }
+        .achievement-card {
+            background: #1a1a1a;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border-left: 4px solid #81c784;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        .achievement-card div {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .tournament-card,
+        .trainer-card,
+        .lesson-card,
+        .meeting-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid #333;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        .tournament-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            word-break: break-word;
+        }
+        .tournament-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #81c784;
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+
+        .participants-list li,
+        .tournaments-list li {
+            background: #2a2a2a;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            word-break: break-word;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .profile-title h1 {
+            color: #81c784;
+            font-size: 1.8rem;
+        }
+        .profile-section {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .section-title {
+            color: #81c784;
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            border-bottom: 1px solid #404040;
+            padding-bottom: 0.3rem;
+        }
+
+        .admin-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .admin-action-card {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #404040;
+            width: 100%;
+        }
+        .admin-action-card a {
+            color: #81c784;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 60px;
+            }
+            .toast-messages {
+                top: 70px;
+            }
+            .burger {
+                display: block;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 50px;
+                right: 0;
+                background: #1a1a1a;
+                padding: 0;
+                border-radius: 8px;
+                border: 1px solid #333;
+                z-index: 999;
+                min-width: 180px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                overflow: hidden;
+            }
+            .nav-links.show {
+                display: flex;
+            }
+            .nav-links a,
+            .nav-links .btn,
+            .nav-links .ml-auto a,
+            .nav-links .ml-auto .btn {
+                display: block;
+                width: 100%;
+                padding: 12px 16px;
+                text-align: center;
+                font-size: 0.9rem;
+                color: #b0b0b0;
+                background: transparent;
+                text-decoration: none;
+                border-bottom: 1px solid #333;
+                margin: 0;
+                box-sizing: border-box;
+                border-radius: 0;
+            }
+            .nav-links a:last-child,
+            .nav-links .btn:last-child,
+            .nav-links .ml-auto a:last-child,
+            .nav-links .ml-auto .btn:last-child {
+                border-bottom: none;
+            }
+            .nav-links a:hover,
+            .nav-links .btn:hover {
+                background: #2a2a2a;
+                color: #81c784;
+            }
+            .nav-links .ml-auto {
+                display: block;
+                width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            .admin-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .admin-buttons {
+                justify-content: center;
+            }
+            .tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+            }
+            .tab {
+                flex-shrink: 0;
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+            .admin-actions-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .tournaments-grid,
+            .trainers-grid,
+            .lessons-grid,
+            .meetings-grid,
+            .gallery-grid,
+            .info-grid,
+            .achievements-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .tournament-info {
+                grid-template-columns: 1fr !important;
+                gap: 0.3rem;
+            }
+            .tournament-card,
+            .trainer-card,
+            .lesson-card,
+            .meeting-card {
+                padding: 0.8rem;
+            }
+            .tournament-name {
+                font-size: 1rem;
+            }
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .profile-title h1 {
+                font-size: 1.5rem;
+            }
+            .login-form,
+            .register-form,
+            .form-card {
+                margin: 0.5rem;
+                padding: 1rem;
+            }
+            .container {
+                padding: 0.8rem;
+            }
+            .info-value, .participant-email, .user-email {
+                word-break: break-all;
+                white-space: normal;
+            }
+            .participants-list li {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .achievement-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .achievement-card div {
+                width: 100%;
+            }
+            .footer {
+                padding: 0.6rem 0.5rem 0.4rem !important;
+                margin-top: 0.8rem !important;
+            }
+            .footer-content {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr 1fr !important;
+                gap: 0.3rem !important;
+                text-align: center !important;
+            }
+            .footer-col {
+                min-width: auto !important;
+            }
+            .footer-col h3 {
+                font-size: 0.6rem !important;
+                margin-bottom: 0.15rem !important;
+            }
+            .footer-col p {
+                font-size: 0.5rem !important;
+                line-height: 1.2 !important;
+            }
+            .footer-col:last-child {
+                grid-column: auto !important;
+            }
+            .footer-bottom {
+                margin-top: 0.3rem !important;
+                padding-top: 0.3rem !important;
+            }
+            .footer-bottom p {
+                font-size: 0.5rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-top: 55px;
+            }
+            .logo {
+                font-size: 1rem;
+            }
+            .btn-sm {
+                padding: 0.2rem 0.5rem;
+                font-size: 0.7rem;
+            }
+            .profile-title h1 {
+                font-size: 1.3rem;
+            }
+            .tab {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
+            }
+            .footer {
+                padding: 0.4rem 0.3rem 0.3rem !important;
+            }
+            .footer-content {
+                gap: 0.2rem !important;
+            }
+            .footer-col h3 {
+                font-size: 0.55rem !important;
+            }
+            .footer-col p {
+                font-size: 0.45rem !important;
+            }
+            .footer-bottom p {
+                font-size: 0.45rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo" onclick="window.location.href='/'">♜ Шахматная академия</div>
+        <button class="burger" id="burgerBtn">☰</button>
+        <div class="nav-links" id="navLinks">
+            <a href="/">Главная</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'tournaments' %}">Турниры</a>
+                <a href="{% url 'trainers_list' %}">Тренеры</a>
+                <a href="{% url 'lessons_list' %}">Уроки</a>
+                <a href="{% url 'meetings_list' %}">Встречи</a>
+                <a href="{% url 'gallery' %}">Новости</a>
+                <a href="{% url 'profile' %}">Профиль</a>
+                <a href="{% url 'chat' %}">Чат</a>
+                {% if user.role == 'admin' %}
+                    <a href="{% url 'users_list' %}">Пользователи</a>
+                    <a href="{% url 'stats' %}">Статистика</a>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'about' %}">О нас</a>
+                <a href="{% url 'trainers_list' %}">Тренеры</a>
+                <a href="{% url 'gallery' %}">Новости</a>
+                <div class="ml-auto">
+                    <a href="{% url 'login' %}" class="btn btn-black">Войти</a>
+                    <a href="{% url 'register' %}" class="btn btn-black">Регистрация</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="toast-messages">
+        {% for message in messages %}
+            <div class="toast-message">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="container">
+        {% if user.is_authenticated and user.role == 'admin' %}
+        <div class="admin-panel">
+            <span>🔧 Панель администратора</span>
+            <div class="admin-buttons">
+                <a href="{% url 'tournament_create' %}" class="btn btn-primary btn-sm">➕ Турнир</a>
+                <a href="{% url 'trainer_create' %}" class="btn btn-primary btn-sm">👨‍🏫 Тренер</a>
+                <a href="{% url 'lesson_create' %}" class="btn btn-primary btn-sm">📚 Урок</a>
+                <a href="{% url 'meeting_create' %}" class="btn btn-primary btn-sm">🤝 Встреча</a>
+                <a href="/admin/main/gallery/add/" class="btn btn-primary btn-sm">📰 Новости</a>
+            </div>
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>♜ Академия</h3>
+                <p>Обучение шахматам онлайн и офлайн</p>
+            </div>
+            <div class="footer-col">
+                <h3>Контакты</h3>
+                <p>📧 burovaekaterina288@gmail.com</p>
+                <p>📞 +7 (914) 567-62-26</p>
+            </div>
+            <div class="footer-col">
+                <h3>Юридическая информация</h3>
+                <p>Все права защищены<br>© {% now "Y" %} Шахматная академия</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const burger = document.getElementById('burgerBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        function closeMenu() {
+            navLinks.classList.remove('show');
+        }
+
+        function toggleMenu(e) {
+            e.stopPropagation();
+            navLinks.classList.toggle('show');
+        }
+
+        if (burger && navLinks) {
+            burger.addEventListener('click', toggleMenu);
+
+            document.addEventListener('click', function(event) {
+                if (!navLinks.contains(event.target) && !burger.contains(event.target)) {
+                    closeMenu();
+                }
+            });
+
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', closeMenu);
+            });
+        }
+
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        setTimeout(() => {
+            document.querySelectorAll('.toast-message').forEach(m => m.remove());
+        }, 3000);
+    </script>
+</body>
+</html>

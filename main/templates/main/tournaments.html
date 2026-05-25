@@ -1,0 +1,184 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Турниры{% endblock %}
+
+{% block content %}
+<style>
+    .tabs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+    .tab {
+        padding: 0.75rem 2rem;
+        background: #1a1a1a;
+        border: 1px solid #333;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    .tab.active {
+        background: #81c784;
+        color: #1a1a1a;
+        border-color: #81c784;
+    }
+    .tournaments-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        gap: 1.5rem;
+    }
+    .tournament-card {
+        background: #1a1a1a;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #333;
+    }
+    .tournament-card:hover {
+        border-color: #81c784;
+    }
+    .tournament-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .tournament-type {
+        padding: 0.25rem 0.75rem;
+        background: #333;
+        color: #81c784;
+        border-radius: 4px;
+        font-size: 0.8rem;
+    }
+    .tournament-name {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #fff;
+        margin-bottom: 1rem;
+    }
+    .tournament-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        color: #b0b0b0;
+    }
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .participants-count {
+        color: #81c784;
+        font-weight: 500;
+    }
+    .btn-register {
+        width: 100%;
+        padding: 0.75rem;
+        background: #81c784;
+        color: #1a1a1a;
+        border: none;
+        border-radius: 4px;
+        font-weight: 600;
+        text-align: center;
+        display: block;
+        text-decoration: none;
+    }
+    .btn-unregister {
+        background: #ff4444;
+        color: white;
+    }
+    .btn-warning {
+        background: #ff9800;
+        color: #1a1a1a;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .admin-actions {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background: #2a2a2a;
+        border-radius: 8px;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .empty-tournaments {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+    }
+    .participants-btn {
+        background: #81c784;
+        color: #1a1a1a;
+        padding: 0.5rem;
+        text-align: center;
+        display: block;
+        text-decoration: none;
+        border-radius: 4px;
+        margin-top: 0.5rem;
+    }
+</style>
+
+{% if user.is_authenticated and user.role == 'admin' %}
+<div class="admin-actions">
+    <a href="{% url 'tournament_create' %}" class="btn btn-primary">➕ Создать турнир</a>
+    <a href="{% url 'users_list' %}" class="btn btn-primary">👥 Управление пользователями</a>
+    <a href="{% url 'stats' %}" class="btn btn-primary">📊 Статистика</a>
+    <span style="color:#ff9800;">🔧 Режим администратора</span>
+</div>
+{% endif %}
+
+<div class="tabs">
+    <a href="?tab=all" class="tab {% if current_tab == 'all' %}active{% endif %}">Все турниры</a>
+    <a href="?tab=online" class="tab {% if current_tab == 'online' %}active{% endif %}">Онлайн турниры</a>
+    <a href="?tab=offline" class="tab {% if current_tab == 'offline' %}active{% endif %}">Очные турниры</a>
+</div>
+
+<div class="tournaments-grid">
+    {% for tournament in tournaments %}
+    <div class="tournament-card">
+        <div class="tournament-header">
+            <span class="tournament-type">{{ tournament.get_type_display }}</span>
+            {% if user.is_authenticated and user.role == 'admin' %}
+            <div>
+                <a href="{% url 'tournament_edit' tournament.id %}" class="btn-warning">✏️</a>
+                <a href="{% url 'tournament_delete' tournament.id %}" class="btn-danger" style="padding:0.5rem 1rem; margin-left:0.5rem; border-radius:4px; text-decoration:none;">🗑️</a>
+            </div>
+            {% endif %}
+        </div>
+        <div class="tournament-name">{{ tournament.name }}</div>
+        <div class="tournament-info">
+            <div class="info-item">📅 {{ tournament.date }}</div>
+            <div class="info-item">⏰ {{ tournament.time|time:"H:i" }}</div>
+            <div class="info-item">📍 {{ tournament.location }}</div>
+            <div class="info-item">👥 <span class="participants-count">{{ tournament.get_participants_count }}</span> / {{ tournament.max_participants }}</div>
+        </div>
+
+        {% if user.is_authenticated and user.role == 'admin' %}
+            <a href="{% url 'tournament_participants' tournament.id %}" class="participants-btn">👥 Участники ({{ tournament.get_participants_count }})</a>
+
+        {% elif user.is_authenticated %}
+            {% if tournament in user.tournaments.all %}
+                <a href="{% url 'tournament_unregister' tournament.id %}" class="btn-register btn-unregister">❌ Отменить запись</a>
+            {% else %}
+                <a href="{% url 'tournament_register' tournament.id %}" class="btn-register" {% if tournament.is_full %}style="background:#333; cursor:not-allowed;"{% endif %}>{% if tournament.is_full %}Мест нет{% else %}✅ Записаться на турнир{% endif %}</a>
+            {% endif %}
+
+        {% else %}
+            <a href="{% url 'login' %}" class="btn-register">🔐 Войдите для записи</a>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="empty-tournaments">
+        <p>Нет доступных турниров</p>
+        {% if user.is_authenticated and user.role == 'admin' %}
+            <p>Создайте первый турнир, нажав кнопку выше!</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

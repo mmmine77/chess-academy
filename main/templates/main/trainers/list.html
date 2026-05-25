@@ -1,0 +1,105 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .trainers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+    .trainer-card {
+        background: #1a1a1a;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid #333;
+        position: relative;
+    }
+    .trainer-card img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        background: #2a2a2a;
+    }
+    .trainer-info {
+        padding: 1.5rem;
+    }
+    .trainer-name {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #81c784;
+        margin-bottom: 0.5rem;
+    }
+    .trainer-spec {
+        color: #b0b0b0;
+        margin-bottom: 0.5rem;
+    }
+    .trainer-price {
+        color: #ff9800;
+        font-weight: bold;
+    }
+    .admin-actions {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        gap: 0.5rem;
+        z-index: 10;
+    }
+    .btn-icon {
+        background: #2a2a2a;
+        padding: 0.3rem 0.6rem;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 0.8rem;
+    }
+    .btn-edit { background: #ff9800; color: #000; }
+    .btn-delete { background: #ff4444; color: #fff; }
+    .btn-sm {
+        padding: 0.3rem 0.8rem;
+        font-size: 0.85rem;
+    }
+    .empty-message {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+    }
+    .trainer-photo-placeholder {
+        height: 250px;
+        background: #2a2a2a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+    }
+</style>
+
+<h1 style="color:#81c784;">👨‍🏫 Наши тренеры</h1>
+
+{% if trainers %}
+<div class="trainers-grid">
+    {% for trainer in trainers %}
+    <div class="trainer-card">
+        {% if user.role == 'admin' %}
+        <div class="admin-actions">
+            <a href="{% url 'trainer_edit' trainer.id %}" class="btn-icon btn-edit">✏️</a>
+            <a href="{% url 'trainer_delete' trainer.id %}" class="btn-icon btn-delete" onclick="return confirm('Удалить тренера?')">🗑️</a>
+        </div>
+        {% endif %}
+        {% if trainer.photo %}
+        <img src="{{ trainer.photo.url }}" alt="{{ trainer.user.full_name }}">
+        {% else %}
+        <div class="trainer-photo-placeholder">👨‍🏫</div>
+        {% endif %}
+        <div class="trainer-info">
+            <div class="trainer-name">{{ trainer.user.full_name|default:trainer.user.username }}</div>
+            <div class="trainer-spec">{{ trainer.specialization|default:"Без специализации" }}</div>
+            <div class="trainer-price">{{ trainer.price_per_hour }} ₽ / час</div>
+            <a href="{% url 'trainer_detail' trainer.id %}" class="btn btn-primary btn-sm" style="margin-top:0.5rem;">Подробнее</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="empty-message">Нет тренеров. Нажмите "👨‍🏫 Тренер" в панели администратора, чтобы добавить.</p>
+{% endif %}
+{% endblock %}

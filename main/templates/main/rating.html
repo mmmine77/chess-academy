@@ -1,0 +1,68 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Рейтинг игроков{% endblock %}
+
+{% block content %}
+<style>
+    .rating-table {
+        width: 100%;
+        background: #1a1a1a;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid #333;
+    }
+    .rating-table th {
+        background: #2a2a2a;
+        padding: 1rem;
+        text-align: left;
+        color: #81c784;
+    }
+    .rating-table td {
+        padding: 0.8rem 1rem;
+        border-bottom: 1px solid #333;
+        color: #b0b0b0;
+    }
+    .rating-table tr:hover td {
+        background: #2a2a2a;
+    }
+    .rank-1 {
+        color: #ffd700;
+        font-weight: bold;
+    }
+    .rank-2 {
+        color: #c0c0c0;
+        font-weight: bold;
+    }
+    .rank-3 {
+        color: #cd7f32;
+        font-weight: bold;
+    }
+</style>
+
+<h1 style="color:#81c784; margin-bottom: 2rem;">📊 Рейтинг игроков (Elo)</h1>
+
+<table class="rating-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Игрок</th>
+            <th>Рейтинг Elo</th>
+            <th>Город</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td class="{% if forloop.counter == 1 %}rank-1{% elif forloop.counter == 2 %}rank-2{% elif forloop.counter == 3 %}rank-3{% endif %}">
+                {{ forloop.counter }}
+            </td>
+            <td>{{ user.full_name|default:user.username }}</td>
+            <td><strong>{{ user.rating }}</strong></td>
+            <td>{{ user.city|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" style="text-align:center;">Нет данных</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

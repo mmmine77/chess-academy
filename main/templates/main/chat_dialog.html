@@ -1,0 +1,477 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .chat-layout {
+        display: flex;
+        gap: 1.5rem;
+        height: calc(100vh - 180px);
+        min-height: 500px;
+    }
+
+    .users-sidebar {
+        width: 280px;
+        background: #1a1a1a;
+        border-radius: 16px;
+        border: 1px solid #333;
+        overflow-y: auto;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar-header {
+        padding: 1rem;
+        border-bottom: 1px solid #333;
+        color: #81c784;
+        font-weight: bold;
+        position: sticky;
+        top: 0;
+        background: #1a1a1a;
+        z-index: 10;
+    }
+    .users-list {
+        flex: 1;
+        overflow-y: auto;
+    }
+    .sidebar-user {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        border-bottom: 1px solid #333;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .sidebar-user:hover {
+        background: #2a2a2a;
+    }
+    .sidebar-user.active {
+        background: #81c78420;
+        border-left: 3px solid #81c784;
+    }
+    .sidebar-user-name {
+        color: #e0e0e0;
+        font-size: 0.9rem;
+    }
+    .sidebar-unread {
+        background: #ff4444;
+        color: white;
+        padding: 0.2rem 0.5rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+    }
+
+    .chat-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #1a1a1a;
+        border-radius: 16px;
+        border: 1px solid #333;
+    }
+    .chat-header {
+        padding: 1rem;
+        border-bottom: 1px solid #333;
+        color: #81c784;
+        font-weight: bold;
+    }
+    .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+    .message {
+        margin-bottom: 0.8rem;
+        padding: 0.6rem 1rem;
+        border-radius: 16px;
+        max-width: 70%;
+        word-wrap: break-word;
+    }
+    .message-sent {
+        background: #81c784;
+        color: #1a1a1a;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+    }
+    .message-received {
+        background: #2a2a2a;
+        color: #fff;
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+    }
+    .message-info {
+        font-size: 0.65rem;
+        margin-bottom: 0.2rem;
+        opacity: 0.7;
+    }
+    .message-sent .message-info {
+        text-align: right;
+    }
+    .delete-msg {
+        color: #ff4444;
+        text-decoration: none;
+        margin-left: 8px;
+        font-size: 0.7rem;
+        cursor: pointer;
+    }
+    .send-form {
+        padding: 1rem;
+        border-top: 1px solid #333;
+    }
+    .send-form textarea {
+        width: 100%;
+        padding: 0.7rem;
+        background: #2a2a2a;
+        border: 1px solid #404040;
+        border-radius: 8px;
+        color: #fff;
+        resize: vertical;
+        font-family: inherit;
+    }
+    .send-form button {
+        margin-top: 0.5rem;
+    }
+    .empty-chat {
+        text-align: center;
+        color: #666;
+        padding: 2rem;
+    }
+    .typing-indicator {
+        color: #81c784;
+        font-size: 0.8rem;
+        padding: 0.5rem;
+        font-style: italic;
+        float: right;
+    }
+
+    @media (max-width: 768px) {
+        .chat-layout {
+            flex-direction: column;
+            height: auto;
+            gap: 0;
+        }
+        .users-sidebar {
+            width: 100%;
+            max-height: 250px;
+            overflow-y: auto;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+        }
+        .chat-main {
+            height: calc(100vh - 300px);
+            min-height: 350px;
+        }
+        .message {
+            max-width: 85%;
+        }
+    }
+</style>
+
+<div class="chat-layout">
+    {% if users %}
+    <div class="users-sidebar">
+        <div class="sidebar-header">👥 Пользователи</div>
+        <div class="users-list" id="users-list">
+            {% for u in users %}
+            <a href="{% url 'chat_dialog' u.id %}" class="sidebar-user {% if u.id == other_user.id %}active{% endif %}" data-user-id="{{ u.id }}">
+                <span class="sidebar-user-name">{{ u.full_name|default:u.username }}</span>
+                {% if u.unread_count > 0 %}
+                    <span class="sidebar-unread">{{ u.unread_count }}</span>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="chat-main">
+        <div class="chat-header">
+            💬 Чат с администратором
+            <span id="typing-indicator" class="typing-indicator"></span>
+        </div>
+
+        <div class="messages-container" id="chat-messages">
+            {% for msg in messages_list %}
+                {% if msg.sender == user %}
+                    <div class="message message-sent" data-id="{{ msg.id }}">
+                        <div class="message-info">
+                            Вы • <span class="msg-time" data-time="{{ msg.created_at|date:'Y-m-d H:i:s' }}"></span>
+                            <span class="delete-msg" onclick="deleteMessage({{ msg.id }})">✕</span>
+                        </div>
+                        <div class="message-text">{{ msg.message }}</div>
+                    </div>
+                {% else %}
+                    <div class="message message-received" data-id="{{ msg.id }}">
+                        <div class="message-info">
+                            {{ msg.sender.full_name|default:msg.sender.username }} • <span class="msg-time" data-time="{{ msg.created_at|date:'Y-m-d H:i:s' }}"></span>
+                        </div>
+                        <div class="message-text">{{ msg.message }}</div>
+                    </div>
+                {% endif %}
+            {% empty %}
+                <div class="empty-chat">
+                    <p>📭 Нет сообщений</p>
+                    <p>Напишите первое сообщение</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="send-form">
+            <textarea id="message-input" rows="3" placeholder="Введите сообщение..."></textarea>
+            <button id="send-btn" class="btn btn-primary">📨 Отправить</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const otherUserId = {{ other_user.id }};
+    let lastMessageId = {{ last_message_id }};
+    let isTyping = false;
+    let typingTimeout = null;
+
+    function formatLocalTime(dateString) {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${day}.${month}.${year} ${hours}:${minutes}`;
+    }
+
+    function updateAllTimes() {
+        document.querySelectorAll('.msg-time').forEach(el => {
+            const timeStr = el.getAttribute('data-time');
+            if (timeStr) {
+                el.textContent = formatLocalTime(timeStr);
+            }
+        });
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('message-input');
+        const message = input.value.trim();
+
+        if (!message) return;
+
+        fetch('/chat/send-ajax/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                recipient_id: otherUserId,
+                message: message
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                input.value = '';
+                input.style.height = 'auto';
+                addMessageToChat(data.message, true);
+                lastMessageId = data.message.id;
+                scrollToBottom();
+            } else {
+                alert('Ошибка: ' + data.error);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function addMessageToChat(msg, isSent) {
+        const container = document.getElementById('chat-messages');
+        const emptyDiv = container.querySelector('.empty-chat');
+        if (emptyDiv) emptyDiv.remove();
+
+        const timeFormatted = formatLocalTime(msg.created_at);
+        let messageHtml;
+
+        if (isSent) {
+            messageHtml = `
+                <div class="message message-sent" data-id="${msg.id}">
+                    <div class="message-info">
+                        Вы • ${timeFormatted}
+                        <span class="delete-msg" onclick="deleteMessage(${msg.id})">✕</span>
+                    </div>
+                    <div class="message-text">${escapeHtml(msg.message)}</div>
+                </div>
+            `;
+        } else {
+            messageHtml = `
+                <div class="message message-received" data-id="${msg.id}">
+                    <div class="message-info">
+                        ${escapeHtml(msg.sender_name)} • ${timeFormatted}
+                    </div>
+                    <div class="message-text">${escapeHtml(msg.message)}</div>
+                </div>
+            `;
+        }
+
+        container.insertAdjacentHTML('beforeend', messageHtml);
+    }
+
+    function loadMessages() {
+        fetch(`/chat/get-messages/${otherUserId}/?last_id=${lastMessageId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.messages && data.messages.length > 0) {
+                const wasAtBottom = isScrolledToBottom();
+
+                data.messages.forEach(msg => {
+                    if (msg.id > lastMessageId) {
+                        addMessageToChat(msg, msg.sender_id === {{ user.id }});
+                        lastMessageId = Math.max(lastMessageId, msg.id);
+                    }
+                });
+
+                if (wasAtBottom) {
+                    scrollToBottom();
+                }
+
+                updateUnreadCounts();
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function isScrolledToBottom() {
+        const container = document.getElementById('chat-messages');
+        return Math.abs(container.scrollHeight - container.scrollTop - container.clientHeight) < 50;
+    }
+
+    function scrollToBottom() {
+        const container = document.getElementById('chat-messages');
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function deleteMessage(messageId) {
+        if (!confirm('Удалить сообщение?')) return;
+
+        fetch('/chat/delete-ajax/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                message_id: messageId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                const messageDiv = document.querySelector(`.message[data-id="${messageId}"]`);
+                if (messageDiv) messageDiv.remove();
+            }
+        });
+    }
+
+    function updateUnreadCounts() {
+        fetch('/chat/get-unread-counts/')
+        .then(response => response.json())
+        .then(data => {
+            for (const [userId, count] of Object.entries(data.counts)) {
+                const userLink = document.querySelector(`.sidebar-user[data-user-id="${userId}"]`);
+                if (userLink) {
+                    const badge = userLink.querySelector('.sidebar-unread');
+                    if (count > 0) {
+                        if (badge) {
+                            badge.textContent = count;
+                        } else {
+                            userLink.insertAdjacentHTML('beforeend', `<span class="sidebar-unread">${count}</span>`);
+                        }
+                    } else if (badge) {
+                        badge.remove();
+                    }
+                }
+            }
+        });
+    }
+
+    function sendTyping() {
+        if (!isTyping) {
+            isTyping = true;
+            fetch('/chat/typing/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ receiver_id: otherUserId, typing: true })
+            }).catch(e => console.log);
+        }
+
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+            isTyping = false;
+            fetch('/chat/typing/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ receiver_id: otherUserId, typing: false })
+            }).catch(e => console.log);
+        }, 1000);
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    const textarea = document.getElementById('message-input');
+    if (textarea) {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+            sendTyping();
+        });
+
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    }
+
+    const sendBtn = document.getElementById('send-btn');
+    if (sendBtn) {
+        sendBtn.addEventListener('click', sendMessage);
+    }
+
+    let interval = setInterval(() => {
+        loadMessages();
+    }, 2000);
+
+    window.addEventListener('beforeunload', () => {
+        clearInterval(interval);
+    });
+
+    window.onload = function() {
+        updateAllTimes();
+        scrollToBottom();
+    };
+</script>
+{% endblock %}

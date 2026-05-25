@@ -1,0 +1,132 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .users-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .users-header {
+        background: #1a1a1a;
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        text-align: center;
+        border: 1px solid #333;
+    }
+    .users-header h2 {
+        color: #81c784;
+    }
+    .user-card {
+        background: #1a1a1a;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .user-card.banned {
+        opacity: 0.7;
+        border-color: #ff4444;
+        background: #2a1a1a;
+    }
+    .user-info {
+        flex: 2;
+    }
+    .user-name {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #81c784;
+    }
+    .user-stats {
+        color: #b0b0b0;
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+    }
+    .user-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .award-form {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    .award-form input {
+        padding: 0.5rem;
+        background: #2a2a2a;
+        border: 1px solid #404040;
+        border-radius: 4px;
+        color: #fff;
+    }
+    .banned-badge {
+        background: #ff4444;
+        color: white;
+        padding: 0.2rem 0.5rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        margin-left: 0.5rem;
+    }
+    .btn-small {
+        padding: 0.3rem 0.8rem;
+        font-size: 0.85rem;
+    }
+</style>
+
+<div class="users-container">
+    <div class="users-header">
+        <h2>👥 Управление пользователями</h2>
+        <p>Всего пользователей: {{ users|length }}</p>
+    </div>
+
+    {% for u in users %}
+    <div class="user-card {% if u.is_banned %}banned{% endif %}">
+        <div class="user-info">
+            <div class="user-name">
+                {{ u.full_name|default:u.username }}
+                {% if u.is_banned %}
+                    <span class="banned-badge">⛔ ЗАБАНЕН</span>
+                {% endif %}
+                {% if u.role == 'admin' %}
+                    <span class="admin-badge" style="background:#ff9800; color:#1a1a1a; padding:0.2rem 0.5rem; border-radius:20px; font-size:0.7rem; margin-left:0.5rem;">Админ</span>
+                {% endif %}
+            </div>
+            <div class="user-stats">
+                @{{ u.username }} | Роль: {% if u.role == 'admin' %}Администратор{% else %}Пользователь{% endif %}
+                | Турниров: {{ u.tournaments_count }} | Достижений: {{ u.achievements_count }}
+            </div>
+            <div class="user-stats">
+                📧 {{ u.email|default:"Email не указан" }} | 📍 {{ u.city|default:"Город не указан" }}
+            </div>
+        </div>
+        <div class="user-actions">
+            {% if u.role != 'admin' %}
+                <form method="POST" action="{% url 'award_achievement' u.id %}" class="award-form">
+                    {% csrf_token %}
+                    <input type="text" name="name" placeholder="Название" required>
+                    <input type="text" name="description" placeholder="Описание" required>
+                    <button type="submit" class="btn btn-primary btn-small">🏆 Наградить</button>
+                </form>
+
+                {% if u.is_banned %}
+                    <a href="{% url 'unban_user' u.id %}" class="btn btn-primary btn-small" style="background:#81c784;">🔓 Разбанить</a>
+                {% else %}
+                    <a href="{% url 'ban_user' u.id %}" class="btn btn-danger btn-small" style="background:#ff4444;">⛔ Забанить</a>
+                {% endif %}
+
+                <!-- КНОПКА УДАЛЕНИЯ -->
+                <a href="{% url 'delete_user' u.id %}" class="btn btn-danger btn-small" style="background:#660000;" onclick="return confirm('Точно удалить пользователя {{ u.username }}? Это действие необратимо!')">🗑️ Удалить</a>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div style="text-align:center; padding:3rem; color:#666;">Нет пользователей</div>
+    {% endfor %}
+</div>
+{% endblock %}

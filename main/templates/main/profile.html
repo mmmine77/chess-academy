@@ -1,0 +1,277 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .profile-card {
+        background: #1a1a1a;
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid #333;
+    }
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .profile-title h1 {
+        color: #81c784;
+        font-size: 2rem;
+    }
+    .profile-section {
+        background: #2a2a2a;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .section-title {
+        color: #81c784;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #404040;
+        padding-bottom: 0.5rem;
+    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+    .info-label {
+        color: #808080;
+        font-size: 0.85rem;
+    }
+    .info-value {
+        color: #fff;
+        padding: 0.5rem;
+        background: #1a1a1a;
+        border-radius: 6px;
+    }
+    .achievements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    .achievement-card {
+        background: #1a1a1a;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #81c784;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .tournaments-list {
+        list-style: none;
+    }
+    .tournaments-list li {
+        background: #1a1a1a;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .empty-message {
+        text-align: center;
+        color: #666;
+        padding: 1rem;
+    }
+    .admin-badge {
+        background: #ff9800;
+        color: #1a1a1a;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin-left: 0.5rem;
+    }
+    .admin-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    .admin-action-card {
+        background: #1a1a1a;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        border: 1px solid #404040;
+        transition: 0.3s;
+    }
+    .admin-action-card:hover {
+        border-color: #81c784;
+        transform: translateY(-3px);
+    }
+    .admin-action-card a {
+        color: #81c784;
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+    .admin-action-card p {
+        color: #808080;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+    }
+    .awarded-by {
+        font-size: 0.7rem;
+        color: #ff9800;
+        margin-top: 0.25rem;
+    }
+    .banned-warning {
+        background: #ff444420;
+        border: 1px solid #ff4444;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        text-align: center;
+        color: #ff8888;
+    }
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .logout-link {
+        color: #ff8888;
+        text-decoration: underline;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+    .logout-link:hover {
+        color: #ff4444;
+    }
+</style>
+
+<div class="profile-card">
+    <div class="profile-header">
+        <div class="profile-title">
+            <h1>{{ user.full_name|default:user.username }}</h1>
+            <p>@{{ user.username }}
+                {% if user.role == 'admin' %}
+                    <span class="admin-badge">Администратор</span>
+                {% endif %}
+                {% if user.is_banned %}
+                    <span style="background:#ff4444; color:white; padding:0.25rem 0.75rem; border-radius:20px;">⛔ Забанен</span>
+                {% endif %}
+            </p>
+        </div>
+        <a href="{% url 'edit_profile' %}" class="btn btn-primary">Редактировать профиль</a>
+    </div>
+
+    {% if user.is_banned and user.role != 'admin' %}
+    <div class="banned-warning">
+        ⚠️ ВАШ АККАУНТ ЗАБЛОКИРОВАН ⚠️<br>
+        Вы не можете записываться на турниры и пользоваться чатом.<br>
+        Обратитесь к администратору для разблокировки.
+    </div>
+    {% endif %}
+
+    <div class="profile-section">
+        <div class="section-title">Личная информация</div>
+        <div class="info-grid">
+            <div class="info-item"><span class="info-label">Email</span><span class="info-value">{{ user.email|default:"Не указан" }}</span></div>
+            <div class="info-item"><span class="info-label">Город</span><span class="info-value">{{ user.city|default:"Не указан" }}</span></div>
+            <div class="info-item"><span class="info-label">Телефон</span><span class="info-value">{{ user.phone|default:"Не указан" }}</span></div>
+            <div class="info-item"><span class="info-label">О себе</span><span class="info-value">{{ user.bio|default:"Не указано" }}</span></div>
+        </div>
+        <div class="action-buttons">
+            <a href="{% url 'logout' %}" class="logout-link" onclick="return confirm('Выйти из аккаунта?')">Выйти из аккаунта</a>
+        </div>
+    </div>
+
+    {# ========== ДЛЯ АДМИНИСТРАТОРА ========== #}
+    {% if user.role == 'admin' %}
+    <div class="profile-section">
+        <div class="section-title">Панель управления</div>
+        <div class="admin-actions-grid">
+            <div class="admin-action-card">
+                <a href="{% url 'tournaments' %}">Управление турнирами</a>
+                <p>Создание, редактирование, удаление турниров</p>
+            </div>
+            <div class="admin-action-card">
+                <a href="{% url 'users_list' %}">Управление пользователями</a>
+                <p>Просмотр всех пользователей, награждение, бан/разбан</p>
+            </div>
+            <div class="admin-action-card">
+                <a href="{% url 'stats' %}">Статистика сайта</a>
+                <p>Общая статистика и аналитика</p>
+            </div>
+            <div class="admin-action-card">
+                <a href="{% url 'chat' %}">Чат с пользователями</a>
+                <p>Ответы на вопросы пользователей</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {# ========== ДЛЯ ОБЫЧНЫХ ПОЛЬЗОВАТЕЛЕЙ ========== #}
+    {% if user.role != 'admin' and not user.is_banned %}
+    <div class="profile-section">
+        <div class="section-title">Мои достижения</div>
+        <div class="achievements-grid">
+            {% for achievement in achievements %}
+            <div class="achievement-card">
+                <div>
+                    <strong>{{ achievement.name }}</strong><br>
+                    <small>{{ achievement.description }}</small>
+                    {% if achievement.awarded_by %}
+                        <div class="awarded-by">Наградил: {{ achievement.awarded_by.full_name|default:achievement.awarded_by.username }}</div>
+                    {% endif %}
+                    <small style="color:#666;">{{ achievement.date|date:"d.m.Y" }}</small>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-message">У вас пока нет достижений. Участвуйте в турнирах и получайте награды от администратора!</div>
+            {% endfor %}
+        </div>
+        <div class="empty-message" style="background:#1a1a1a; margin-top:1rem; padding:0.5rem;">
+            Достижения выдаются администратором после завершения турниров
+        </div>
+    </div>
+
+    <div class="profile-section">
+        <div class="section-title">Мои турниры</div>
+        <ul class="tournaments-list">
+            {% for tournament in tournaments %}
+            <li>
+                <div>
+                    <strong>{{ tournament.name }}</strong><br>
+                    <small>{{ tournament.date }} {{ tournament.time|time:"H:i" }} | {{ tournament.get_type_display }} | {{ tournament.location }}</small>
+                </div>
+                <a href="{% url 'tournament_unregister' tournament.id %}" class="btn-danger" style="padding:0.3rem 1rem; text-decoration:none;">Отменить запись</a>
+            </li>
+            {% empty %}
+            <li class="empty-message">Вы не записаны ни на один турнир</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {# ========== ДЛЯ ЗАБАНЕННЫХ ПОЛЬЗОВАТЕЛЕЙ ========== #}
+    {% if user.role != 'admin' and user.is_banned %}
+    <div class="profile-section">
+        <div class="section-title">Доступ ограничен</div>
+        <div class="empty-message">
+            Ваш аккаунт заблокирован. Вы не можете:<br>
+            - Записываться на турниры<br>
+            - Пользоваться чатом<br><br>
+            Для разблокировки обратитесь к администратору.
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

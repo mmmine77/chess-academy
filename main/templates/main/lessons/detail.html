@@ -1,0 +1,85 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .detail-container {
+        max-width: 700px;
+        margin: 0 auto;
+        background: #1a1a1a;
+        padding: 2rem;
+        border-radius: 16px;
+        border: 1px solid #333;
+    }
+    .detail-container h1 {
+        color: #81c784;
+        margin-bottom: 1rem;
+    }
+    .detail-info {
+        margin: 1.5rem 0;
+    }
+    .detail-info p {
+        margin-bottom: 0.8rem;
+        color: #b0b0b0;
+        font-size: 1rem;
+    }
+    .detail-info strong {
+        color: #e0e0e0;
+        width: 80px;
+        display: inline-block;
+    }
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+    .btn-back, .btn-edit, .btn-delete {
+        padding: 0.5rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn-back {
+        background: #81c784;
+        color: #000;
+    }
+    .btn-back:hover {
+        background: #6bb86e;
+    }
+    .btn-edit {
+        background: #ff9800;
+        color: #000;
+    }
+    .btn-delete {
+        background: #ff4444;
+        color: #fff;
+    }
+    @media (max-width: 768px) {
+        .button-group {
+            flex-direction: column;
+        }
+        .btn-back, .btn-edit, .btn-delete {
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="detail-container">
+    <h1>{{ lesson.name }}</h1>
+
+    <div class="detail-info">
+        <p><strong>Дата:</strong> {{ lesson.date|date:"d.m.Y" }}</p>
+        <p><strong>Время:</strong> {{ lesson.time|time:"H:i" }}</p>
+        <p><strong>Адрес:</strong> {{ lesson.location|default:"Не указан" }}</p>
+    </div>
+
+    <div class="button-group">
+        <a href="{% url 'lessons_list' %}" class="btn-back">Назад к расписанию</a>
+
+        {% if user.role == 'admin' %}
+            <a href="{% url 'lesson_edit' lesson.id %}" class="btn-edit">Редактировать</a>
+            <a href="{% url 'lesson_delete' lesson.id %}" class="btn-delete" onclick="return confirm('Удалить урок?')">Удалить</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

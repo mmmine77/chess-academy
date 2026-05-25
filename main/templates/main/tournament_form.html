@@ -1,0 +1,72 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .form-card {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #1a1a1a;
+        padding: 2rem;
+        border-radius: 16px;
+        border: 1px solid #333;
+    }
+    .form-card h2 {
+        color: #81c784;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    .form-group label {
+        display: block;
+        color: #b0b0b0;
+        margin-bottom: 0.5rem;
+    }
+    .form-group input, .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        background: #2a2a2a;
+        border: 2px solid #404040;
+        border-radius: 8px;
+        color: #fff;
+    }
+    .btn-block {
+        width: 100%;
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="form-card">
+    <h2>{{ title }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Название турнира</label>
+            {{ form.name }}
+        </div>
+        <div class="form-group">
+            <label>Дата</label>
+            {{ form.date }}
+        </div>
+        <div class="form-group">
+            <label>Время</label>
+            {{ form.time }}
+        </div>
+        <div class="form-group">
+            <label>Тип турнира</label>
+            {{ form.type }}
+        </div>
+        <div class="form-group">
+            <label>Место проведения / Платформа</label>
+            {{ form.location }}
+        </div>
+        <div class="form-group">
+            <label>Максимум участников</label>
+            {{ form.max_participants }}
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
+        <a href="/" class="btn btn-danger btn-block" style="display:block; text-align:center; margin-top:1rem; text-decoration:none;">Отмена</a>
+    </form>
+</div>
+{% endblock %}
