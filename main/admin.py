@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (
-    User, Tournament, Achievement, Message, Trainer, Gallery
+    User, Tournament, Achievement, Message, Trainer, Gallery, Lesson, ClubMeeting
 )
 
 
@@ -63,6 +63,27 @@ class TrainerAdmin(admin.ModelAdmin):
     list_filter = ('is_available', 'experience')
     search_fields = ('user__username', 'user__full_name', 'specialization', 'title')
     raw_id_fields = ('user',)
+
+
+# ========== УРОКИ ==========
+@admin.register(Lesson)
+class LessonAdmin(admin.ModelAdmin):
+    list_display = ('name', 'date', 'time', 'location')
+    list_filter = ('date',)
+    search_fields = ('name', 'location')
+
+
+# ========== КЛУБНЫЕ ВСТРЕЧИ ==========
+@admin.register(ClubMeeting)
+class ClubMeetingAdmin(admin.ModelAdmin):
+    list_display = ('name', 'date', 'time', 'location', 'max_participants', 'participants_count')
+    list_filter = ('date',)
+    search_fields = ('name', 'location')
+    filter_horizontal = ('participants',)
+
+    def participants_count(self, obj):
+        return obj.participants.count()
+    participants_count.short_description = 'Участников'
 
 
 # ========== ГАЛЕРЕЯ / НОВОСТИ ==========
