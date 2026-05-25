@@ -36,15 +36,45 @@
         color: #81c784;
         text-decoration: none;
     }
+    .error-message {
+        background: #ff444420;
+        border: 1px solid #ff4444;
+        color: #ff8888;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    .password-field {
+        position: relative;
+    }
+    .toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        color: #81c784;
+    }
 </style>
 
 <div class="login-form">
     <h2>🔐 Вход в систему</h2>
     <form method="post">
         {% csrf_token %}
+
+        {% if form.errors %}
+        <div class="error-message">
+            ⚠️ Неверный логин или пароль. Попробуйте снова.
+        </div>
+        {% endif %}
+
         <div class="form-group">
             <label>Имя пользователя</label>
-            <input type="text" name="username" style="width:100%; padding:0.75rem; background:#2a2a2a; border:2px solid #404040; border-radius:8px; color:#fff;" required>
+            <input type="text" name="username" style="width:100%; padding:0.75rem; background:#2a2a2a; border:2px solid #404040; border-radius:8px; color:#fff;" required autofocus>
         </div>
         <div class="form-group">
             <label>Пароль</label>
@@ -59,4 +89,17 @@
         Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a>
     </div>
 </div>
+
+<script>
+    function togglePassword(inputId, button) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            button.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            button.textContent = '👁️';
+        }
+    }
+</script>
 {% endblock %}
