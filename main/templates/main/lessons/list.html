@@ -35,6 +35,12 @@
         color: #81c784;
         margin-bottom: 0.5rem;
     }
+    .lesson-description {
+        color: #b0b0b0;
+        font-size: 0.85rem;
+        margin-bottom: 0.8rem;
+        line-height: 1.4;
+    }
     .lesson-detail {
         margin-bottom: 0.3rem;
         color: #b0b0b0;
@@ -92,6 +98,9 @@
     {% for lesson in lessons %}
     <div class="lesson-card">
         <div class="lesson-name">{{ lesson.name }}</div>
+        {% if lesson.description %}
+        <div class="lesson-description">{{ lesson.description|truncatewords:20 }}</div>
+        {% endif %}
         <div class="lesson-detail"><strong>Дата:</strong> {{ lesson.date|date:"d.m.Y" }}</div>
         <div class="lesson-detail"><strong>Время:</strong> {{ lesson.time|time:"H:i" }}</div>
         <div class="lesson-detail"><strong>Адрес:</strong> {{ lesson.location|default:"Не указан" }}</div>
