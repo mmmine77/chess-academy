@@ -9,7 +9,7 @@ urlpatterns = [
 
     # Авторизация
     path('register/', views.register, name='register'),
-    path('login/', auth_views.LoginView.as_view(template_name='main/login.html'), name='login'),
+    path('login/', views.CustomLoginView.as_view(), name='login'),
     path('logout/', views.user_logout, name='logout'),
 
     # Профиль
@@ -84,4 +84,9 @@ urlpatterns = [
     path('gallery/<int:id>/edit/', views.gallery_edit, name='gallery_edit'),
     path('gallery/<int:id>/delete/', views.gallery_delete, name='gallery_delete'),
     path('users/<int:user_id>/delete/', views.delete_user, name='delete_user'),
+    path('achievement/<int:achievement_id>/edit/', views.edit_achievement, name='edit_achievement'),
+    path('achievement/<int:achievement_id>/delete/', views.delete_achievement, name='delete_achievement'),
+    path('news/<int:news_id>/', views.news_detail, name='news_detail'),
+    path('news/<int:news_id>/edit/', views.edit_news, name='edit_news'),
+    path('news/<int:news_id>/delete/', views.delete_news, name='delete_news'),
 ]

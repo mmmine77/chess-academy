@@ -32,7 +32,7 @@ class CustomLoginView(LoginView):
     def form_valid(self, form):
         user = form.get_user()
         if user.is_banned:
-            messages.error(self.request, '❌ Ваш аккаунт заблокирован.')
+            messages.error(self.request, '⛔ Ваш аккаунт заблокирован. Обратитесь к администратору.')
             return redirect('login')
         return super().form_valid(form)
 
@@ -811,6 +811,31 @@ def award_achievement(request, user_id):
                 awarded_by=request.user
             )
             messages.success(request, f'Достижение "{name}" выдано {user.username}!')
+    return redirect('users_list')
+
+
+@login_required
+@user_passes_test(is_admin)
+def edit_achievement(request, achievement_id):
+    achievement = get_object_or_404(Achievement, id=achievement_id)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        if name and description:
+            achievement.name = name
+            achievement.description = description
+            achievement.save()
+            messages.success(request, 'Достижение обновлено!')
+            return redirect('users_list')
+    return render(request, 'main/edit_achievement.html', {'achievement': achievement})
+
+
+@login_required
+@user_passes_test(is_admin)
+def delete_achievement(request, achievement_id):
+    achievement = get_object_or_404(Achievement, id=achievement_id)
+    achievement.delete()
+    messages.success(request, 'Достижение удалено!')
     return redirect('users_list')
 
 

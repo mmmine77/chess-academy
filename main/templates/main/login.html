@@ -5,59 +5,98 @@
     .login-form {
         max-width: 400px;
         margin: 50px auto;
-        background: #1a1a1a;
+        background: white;
         padding: 2rem;
-        border-radius: 16px;
-        border: 1px solid #333;
+        border-radius: 24px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     }
     .login-form h2 {
-        color: #81c784;
+        color: #2c7da0;
         margin-bottom: 1.5rem;
         text-align: center;
+        font-weight: 600;
     }
     .form-group {
         margin-bottom: 1rem;
     }
     .form-group label {
         display: block;
-        color: #b0b0b0;
+        color: #495057;
         margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        color: #212529;
+        transition: all 0.2s;
+    }
+    .form-group input:focus {
+        outline: none;
+        border-color: #2c7da0;
+        box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
     }
     .btn-block {
         width: 100%;
         margin-top: 1rem;
+        padding: 0.75rem;
+        border-radius: 30px;
+        font-weight: 600;
     }
     .register-link {
         text-align: center;
         margin-top: 1rem;
-        color: #666;
+        color: #6c757d;
     }
     .register-link a {
-        color: #81c784;
+        color: #2c7da0;
         text-decoration: none;
+        font-weight: 500;
+    }
+    .register-link a:hover {
+        text-decoration: underline;
     }
     .error-message {
-        background: #ff444420;
-        border: 1px solid #ff4444;
-        color: #ff8888;
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
         padding: 0.75rem;
-        border-radius: 8px;
+        border-radius: 12px;
         margin-bottom: 1rem;
         text-align: center;
+        font-size: 0.85rem;
     }
     .password-field {
         position: relative;
     }
     .toggle-password {
         position: absolute;
-        right: 10px;
+        right: 12px;
         top: 50%;
         transform: translateY(-50%);
         background: none;
         border: none;
         cursor: pointer;
         font-size: 1rem;
-        color: #81c784;
+        color: #6c757d;
+        transition: color 0.2s;
+    }
+    .toggle-password:hover {
+        color: #2c7da0;
+    }
+    .btn-primary {
+        background: #2c7da0;
+        color: white;
+        border: none;
+        transition: all 0.2s;
+    }
+    .btn-primary:hover {
+        background: #1f5e7a;
+        transform: translateY(-1px);
     }
 </style>
 
@@ -74,12 +113,12 @@
 
         <div class="form-group">
             <label>Имя пользователя</label>
-            <input type="text" name="username" style="width:100%; padding:0.75rem; background:#2a2a2a; border:2px solid #404040; border-radius:8px; color:#fff;" required autofocus>
+            <input type="text" name="username" required autofocus>
         </div>
         <div class="form-group">
             <label>Пароль</label>
             <div class="password-field">
-                <input type="password" name="password" id="loginPassword" style="width:100%; padding:0.75rem; background:#2a2a2a; border:2px solid #404040; border-radius:8px; color:#fff;" required>
+                <input type="password" name="password" id="loginPassword" required>
                 <button type="button" class="toggle-password" onclick="togglePassword('loginPassword', this)">👁️</button>
             </div>
         </div>

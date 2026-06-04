@@ -72,7 +72,6 @@
             <div>
                 <div class="participant-name">{{ participant.full_name|default:participant.username }}</div>
                 <div class="participant-email">{{ participant.email|default:"Email не указан" }}</div>
-                <div class="participant-email">🏆 Рейтинг: {{ participant.rating|default:"-" }}</div>
             </div>
             <div>
                 {% if not participant.is_banned %}

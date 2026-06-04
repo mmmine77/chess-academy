@@ -5,25 +5,30 @@
     .trainer-container {
         max-width: 800px;
         margin: 0 auto;
-        background: #1a1a1a;
+        background: white;
         padding: 2rem;
-        border-radius: 16px;
+        border-radius: 24px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
     }
     .trainer-container h1 {
-        color: #81c784;
+        color: #2c7da0;
         margin-bottom: 1rem;
+        font-weight: 600;
     }
     .trainer-photo {
         max-width: 200px;
-        border-radius: 8px;
+        border-radius: 12px;
         margin: 1rem 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .trainer-info p {
         margin-bottom: 0.5rem;
-        color: #b0b0b0;
+        color: #495057;
     }
     .trainer-info strong {
-        color: #e0e0e0;
+        color: #212529;
+        font-weight: 600;
     }
     .button-group {
         display: flex;
@@ -32,32 +37,37 @@
         flex-wrap: wrap;
     }
     .btn-back, .btn-edit, .btn-delete {
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
+        padding: 0.5rem 1.2rem;
+        border-radius: 30px;
         text-decoration: none;
         display: inline-block;
         text-align: center;
+        font-weight: 500;
+        transition: all 0.2s;
     }
     .btn-back {
-        background: #81c784;
-        color: #000;
+        background: #2c7da0;
+        color: white;
     }
     .btn-back:hover {
-        background: #6bb86e;
+        background: #1f5e7a;
+        transform: translateY(-1px);
     }
     .btn-edit {
-        background: #2196f3;
-        color: #fff;
+        background: #ffc107;
+        color: #212529;
     }
     .btn-edit:hover {
-        background: #1976d2;
+        background: #e0a800;
+        transform: translateY(-1px);
     }
     .btn-delete {
-        background: #ff4444;
-        color: #fff;
+        background: #dc3545;
+        color: white;
     }
     .btn-delete:hover {
-        background: #cc0000;
+        background: #bb2d3b;
+        transform: translateY(-1px);
     }
 
     @media (max-width: 768px) {

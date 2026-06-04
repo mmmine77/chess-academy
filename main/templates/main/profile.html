@@ -3,10 +3,11 @@
 {% block content %}
 <style>
     .profile-card {
-        background: #1a1a1a;
-        border-radius: 16px;
+        background: white;
+        border-radius: 24px;
         padding: 2rem;
-        border: 1px solid #333;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .profile-header {
         display: flex;
@@ -17,20 +18,24 @@
         gap: 1rem;
     }
     .profile-title h1 {
-        color: #81c784;
+        color: #2c7da0;
         font-size: 2rem;
     }
+    .profile-title p {
+        color: #6c757d;
+    }
     .profile-section {
-        background: #2a2a2a;
-        border-radius: 12px;
+        background: #f8f9fa;
+        border-radius: 16px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
+        border: 1px solid #e0e0e0;
     }
     .section-title {
-        color: #81c784;
-        font-size: 1.3rem;
+        color: #2c7da0;
+        font-size: 1.2rem;
         margin-bottom: 1rem;
-        border-bottom: 1px solid #404040;
+        border-bottom: 1px solid #dee2e6;
         padding-bottom: 0.5rem;
     }
     .info-grid {
@@ -44,14 +49,15 @@
         gap: 0.3rem;
     }
     .info-label {
-        color: #808080;
+        color: #6c757d;
         font-size: 0.85rem;
     }
     .info-value {
-        color: #fff;
+        color: #212529;
         padding: 0.5rem;
-        background: #1a1a1a;
-        border-radius: 6px;
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
     }
     .achievements-grid {
         display: grid;
@@ -60,40 +66,56 @@
         margin-bottom: 1rem;
     }
     .achievement-card {
-        background: #1a1a1a;
+        background: white;
         padding: 1rem;
-        border-radius: 8px;
-        border-left: 4px solid #81c784;
+        border-radius: 12px;
+        border-left: 4px solid #2c7da0;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        border: 1px solid #e0e0e0;
+    }
+    .achievement-card strong {
+        color: #212529;
+    }
+    .achievement-card small {
+        color: #6c757d;
     }
     .tournaments-list {
         list-style: none;
     }
     .tournaments-list li {
-        background: #1a1a1a;
+        background: white;
         padding: 1rem;
         margin-bottom: 0.75rem;
-        border-radius: 8px;
+        border-radius: 12px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
         gap: 1rem;
+        border: 1px solid #e0e0e0;
+    }
+    .tournaments-list li strong {
+        color: #212529;
+    }
+    .tournaments-list li small {
+        color: #6c757d;
     }
     .empty-message {
         text-align: center;
-        color: #666;
+        color: #6c757d;
         padding: 1rem;
     }
     .admin-badge {
-        background: #ff9800;
-        color: #1a1a1a;
+        background: #ffc107;
+        color: #212529;
         padding: 0.25rem 0.75rem;
         border-radius: 20px;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         margin-left: 0.5rem;
+        font-weight: 500;
     }
     .admin-actions-grid {
         display: grid;
@@ -102,41 +124,42 @@
         margin-top: 1rem;
     }
     .admin-action-card {
-        background: #1a1a1a;
+        background: white;
         padding: 1rem;
-        border-radius: 8px;
+        border-radius: 12px;
         text-align: center;
-        border: 1px solid #404040;
+        border: 1px solid #e0e0e0;
         transition: 0.3s;
     }
     .admin-action-card:hover {
-        border-color: #81c784;
+        border-color: #2c7da0;
         transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .admin-action-card a {
-        color: #81c784;
+        color: #2c7da0;
         text-decoration: none;
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: bold;
     }
     .admin-action-card p {
-        color: #808080;
-        font-size: 0.85rem;
+        color: #6c757d;
+        font-size: 0.8rem;
         margin-top: 0.5rem;
     }
     .awarded-by {
         font-size: 0.7rem;
-        color: #ff9800;
+        color: #ffc107;
         margin-top: 0.25rem;
     }
     .banned-warning {
-        background: #ff444420;
-        border: 1px solid #ff4444;
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
         padding: 1rem;
-        border-radius: 8px;
+        border-radius: 12px;
         margin-bottom: 1rem;
         text-align: center;
-        color: #ff8888;
+        color: #721c24;
     }
     .action-buttons {
         display: flex;
@@ -146,13 +169,35 @@
         justify-content: center;
     }
     .logout-link {
-        color: #ff8888;
+        color: #dc3545;
         text-decoration: underline;
         cursor: pointer;
         font-size: 0.9rem;
     }
     .logout-link:hover {
-        color: #ff4444;
+        color: #bb2d3b;
+    }
+    .btn-primary {
+        background: #2c7da0;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .btn-primary:hover {
+        background: #1f5e7a;
+    }
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+        padding: 0.3rem 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.8rem;
+    }
+    .btn-danger:hover {
+        background: #bb2d3b;
     }
 </style>
 
@@ -165,11 +210,11 @@
                     <span class="admin-badge">Администратор</span>
                 {% endif %}
                 {% if user.is_banned %}
-                    <span style="background:#ff4444; color:white; padding:0.25rem 0.75rem; border-radius:20px;">⛔ Забанен</span>
+                    <span style="background:#dc3545; color:white; padding:0.25rem 0.75rem; border-radius:20px;">⛔ Забанен</span>
                 {% endif %}
             </p>
         </div>
-        <a href="{% url 'edit_profile' %}" class="btn btn-primary">Редактировать профиль</a>
+        <a href="{% url 'edit_profile' %}" class="btn-primary">Редактировать профиль</a>
     </div>
 
     {% if user.is_banned and user.role != 'admin' %}
@@ -231,14 +276,14 @@
                     {% if achievement.awarded_by %}
                         <div class="awarded-by">Наградил: {{ achievement.awarded_by.full_name|default:achievement.awarded_by.username }}</div>
                     {% endif %}
-                    <small style="color:#666;">{{ achievement.date|date:"d.m.Y" }}</small>
+                    <small style="color:#6c757d;">{{ achievement.date|date:"d.m.Y" }}</small>
                 </div>
             </div>
             {% empty %}
             <div class="empty-message">У вас пока нет достижений. Участвуйте в турнирах и получайте награды от администратора!</div>
             {% endfor %}
         </div>
-        <div class="empty-message" style="background:#1a1a1a; margin-top:1rem; padding:0.5rem;">
+        <div class="empty-message" style="background:#f8f9fa; margin-top:1rem; padding:0.5rem; border-radius:8px;">
             Достижения выдаются администратором после завершения турниров
         </div>
     </div>
@@ -252,7 +297,7 @@
                     <strong>{{ tournament.name }}</strong><br>
                     <small>{{ tournament.date }} {{ tournament.time|time:"H:i" }} | {{ tournament.get_type_display }} | {{ tournament.location }}</small>
                 </div>
-                <a href="{% url 'tournament_unregister' tournament.id %}" class="btn-danger" style="padding:0.3rem 1rem; text-decoration:none;">Отменить запись</a>
+                <a href="{% url 'tournament_unregister' tournament.id %}" class="btn-danger">Отменить запись</a>
             </li>
             {% empty %}
             <li class="empty-message">Вы не записаны ни на один турнир</li>

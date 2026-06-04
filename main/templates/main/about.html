@@ -3,23 +3,25 @@
 {% block content %}
 <style>
     .about-card {
-        background: #1a1a1a;
-        border-radius: 16px;
+        background: white;
+        border-radius: 24px;
         padding: 2rem;
-        border: 1px solid #333;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
     }
     .about-card h1 {
-        color: #81c784;
+        color: #2c7da0;
         font-size: 2rem;
         margin-bottom: 1rem;
+        font-weight: 600;
     }
     .about-card p {
-        color: #b0b0b0;
-        line-height: 1.8;
+        color: #495057;
+        line-height: 1.7;
         margin-bottom: 1rem;
     }
     .about-card ul {
-        color: #b0b0b0;
+        color: #495057;
         margin-left: 1.5rem;
         line-height: 1.8;
         margin-bottom: 1rem;
@@ -28,14 +30,19 @@
         margin-bottom: 0.5rem;
     }
     .practice-info {
-        background: #2a2a2a;
+        background: #f8f9fa;
         padding: 1.5rem;
-        border-radius: 12px;
+        border-radius: 16px;
         margin-top: 2rem;
+        border: 1px solid #e0e0e0;
     }
     .practice-info h3 {
-        color: #ff9800;
+        color: #2c7da0;
         margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    .practice-info p {
+        color: #495057;
     }
     .stats {
         display: grid;
@@ -46,16 +53,17 @@
     .stat {
         text-align: center;
         padding: 1rem;
-        background: #2a2a2a;
-        border-radius: 8px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        border: 1px solid #e0e0e0;
     }
     .stat-number {
         font-size: 2rem;
         font-weight: bold;
-        color: #81c784;
+        color: #2c7da0;
     }
     .stat-label {
-        color: #808080;
+        color: #6c757d;
     }
 </style>
 
@@ -68,7 +76,6 @@
 
     <p><strong>На платформе вы найдете:</strong></p>
     <ul>
-
         <li>🏆 Регулярные онлайн-турниры</li>
         <li>👨‍🏫 Индивидуальные занятия с тренерами</li>
         <li>📊 Аналитику прогресса и персональные рекомендации</li>
@@ -77,9 +84,5 @@
     </ul>
 
     <p>Присоединяйтесь к нам, чтобы делать ходы, побеждать и расти вместе с Шахматной академией! ♜</p>
-
-
-
-
 </div>
 {% endblock %}

@@ -8,34 +8,43 @@
         gap: 2rem;
     }
     .trainer-card {
-        background: #1a1a1a;
-        border-radius: 16px;
+        background: white;
+        border-radius: 20px;
         overflow: hidden;
-        border: 1px solid #333;
+        border: 1px solid #e0e0e0;
         position: relative;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+    .trainer-card:hover {
+        transform: translateY(-4px);
+        border-color: #2c7da0;
+        box-shadow: 0 12px 24px rgba(0,0,0,0.1);
     }
     .trainer-card img {
         width: 100%;
         height: auto;
         object-fit: contain;
-        background: #2a2a2a;
+        background: #f8f9fa;
     }
     .trainer-info {
-        padding: 1.5rem;
+        padding: 1.2rem;
     }
     .trainer-name {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         font-weight: bold;
-        color: #81c784;
-        margin-bottom: 0.5rem;
+        color: #212529;
+        margin-bottom: 0.4rem;
     }
     .trainer-spec {
-        color: #b0b0b0;
-        margin-bottom: 0.5rem;
+        color: #6c757d;
+        margin-bottom: 0.4rem;
+        font-size: 0.85rem;
     }
     .trainer-price {
-        color: #ff9800;
+        color: #2c7da0;
         font-weight: bold;
+        font-size: 1rem;
     }
     .admin-actions {
         position: absolute;
@@ -46,14 +55,27 @@
         z-index: 10;
     }
     .btn-icon {
-        background: #2a2a2a;
         padding: 0.3rem 0.6rem;
-        border-radius: 4px;
+        border-radius: 8px;
         text-decoration: none;
         font-size: 0.8rem;
+        font-weight: 500;
+        transition: all 0.2s;
     }
-    .btn-edit { background: #ff9800; color: #000; }
-    .btn-delete { background: #ff4444; color: #fff; }
+    .btn-edit {
+        background: #ffc107;
+        color: #212529;
+    }
+    .btn-edit:hover {
+        background: #e0a800;
+    }
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+    }
+    .btn-delete:hover {
+        background: #bb2d3b;
+    }
     .btn-sm {
         padding: 0.3rem 0.8rem;
         font-size: 0.85rem;
@@ -61,19 +83,43 @@
     .empty-message {
         text-align: center;
         padding: 3rem;
-        color: #666;
+        color: #6c757d;
+        background: white;
+        border-radius: 20px;
+        border: 1px solid #e0e0e0;
     }
     .trainer-photo-placeholder {
         height: 250px;
-        background: #2a2a2a;
+        background: #f8f9fa;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 4rem;
+        color: #adb5bd;
+    }
+    .page-title {
+        color: #2c7da0;
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+        font-weight: 600;
+    }
+    .btn-primary {
+        background: #2c7da0;
+        color: white;
+        padding: 0.4rem 1rem;
+        border-radius: 30px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        display: inline-block;
+        transition: all 0.2s;
+    }
+    .btn-primary:hover {
+        background: #1f5e7a;
+        transform: translateY(-1px);
     }
 </style>
 
-<h1 style="color:#81c784;">👨‍🏫 Наши тренеры</h1>
+<h1 class="page-title">👨‍🏫 Наши тренеры</h1>
 
 {% if trainers %}
 <div class="trainers-grid">
@@ -94,7 +140,7 @@
             <div class="trainer-name">{{ trainer.user.full_name|default:trainer.user.username }}</div>
             <div class="trainer-spec">{{ trainer.specialization|default:"Без специализации" }}</div>
             <div class="trainer-price">{{ trainer.price_per_hour }} ₽ / час</div>
-            <a href="{% url 'trainer_detail' trainer.id %}" class="btn btn-primary btn-sm" style="margin-top:0.5rem;">Подробнее</a>
+            <a href="{% url 'trainer_detail' trainer.id %}" class="btn-primary" style="margin-top:0.6rem;">Подробнее</a>
         </div>
     </div>
     {% endfor %}

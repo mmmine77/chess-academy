@@ -7,32 +7,46 @@
         margin: 0 auto;
     }
     .users-header {
-        background: #1a1a1a;
+        background: #f8f9fa;
         padding: 1rem;
-        border-radius: 12px;
+        border-radius: 16px;
         margin-bottom: 1rem;
         text-align: center;
-        border: 1px solid #333;
+        border: 1px solid #e0e0e0;
     }
     .users-header h2 {
-        color: #81c784;
+        color: #2c7da0;
+    }
+    .users-header p {
+        color: #6c757d;
     }
     .user-card {
-        background: #1a1a1a;
-        border-radius: 12px;
+        background: white;
+        border-radius: 16px;
         padding: 1rem;
         margin-bottom: 1rem;
-        border: 1px solid #333;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
+        border: 1px solid #e0e0e0;
+        display: block;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.2s;
+    }
+    .user-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .user-card.banned {
-        opacity: 0.7;
-        border-color: #ff4444;
-        background: #2a1a1a;
+        opacity: 0.8;
+        border-color: #dc3545;
+        background: #fff5f5;
+    }
+    .user-main-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e0e0e0;
     }
     .user-info {
         flex: 2;
@@ -40,11 +54,11 @@
     .user-name {
         font-size: 1.2rem;
         font-weight: bold;
-        color: #81c784;
+        color: #2c7da0;
     }
     .user-stats {
-        color: #b0b0b0;
-        font-size: 0.9rem;
+        color: #6c757d;
+        font-size: 0.85rem;
         margin-top: 0.25rem;
     }
     .user-actions {
@@ -60,13 +74,17 @@
     }
     .award-form input {
         padding: 0.5rem;
-        background: #2a2a2a;
-        border: 1px solid #404040;
-        border-radius: 4px;
-        color: #fff;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        color: #212529;
+    }
+    .award-form input:focus {
+        outline: none;
+        border-color: #2c7da0;
     }
     .banned-badge {
-        background: #ff4444;
+        background: #dc3545;
         color: white;
         padding: 0.2rem 0.5rem;
         border-radius: 20px;
@@ -76,6 +94,82 @@
     .btn-small {
         padding: 0.3rem 0.8rem;
         font-size: 0.85rem;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+    .btn-primary {
+        background: #2c7da0;
+        color: white;
+        border: none;
+    }
+    .btn-primary:hover {
+        background: #1f5e7a;
+    }
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+        border: none;
+    }
+    .btn-danger:hover {
+        background: #bb2d3b;
+    }
+    .achievements-section {
+        margin-top: 1rem;
+    }
+    .achievements-title {
+        color: #2c7da0;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+    .achievements-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .achievement-item {
+        background: #f8f9fa;
+        padding: 0.3rem 0.6rem;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: 1px solid #e0e0e0;
+    }
+    .achievement-name {
+        color: #212529;
+    }
+    .achievement-actions {
+        display: inline-flex;
+        gap: 0.3rem;
+    }
+    .achievement-actions a {
+        color: #dc3545;
+        text-decoration: none;
+        font-size: 0.7rem;
+    }
+    .achievement-actions a:hover {
+        color: #bb2d3b;
+    }
+    .achievement-actions .edit-achieve {
+        color: #ffc107;
+    }
+    .achievement-actions .edit-achieve:hover {
+        color: #e0a800;
+    }
+    .empty-achievements {
+        color: #6c757d;
+        font-size: 0.75rem;
+    }
+    .admin-badge {
+        background: #ffc107;
+        color: #212529;
+        padding: 0.2rem 0.5rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        margin-left: 0.5rem;
+        font-weight: 500;
     }
 </style>
 
@@ -87,46 +181,66 @@
 
     {% for u in users %}
     <div class="user-card {% if u.is_banned %}banned{% endif %}">
-        <div class="user-info">
-            <div class="user-name">
-                {{ u.full_name|default:u.username }}
-                {% if u.is_banned %}
-                    <span class="banned-badge">⛔ ЗАБАНЕН</span>
-                {% endif %}
-                {% if u.role == 'admin' %}
-                    <span class="admin-badge" style="background:#ff9800; color:#1a1a1a; padding:0.2rem 0.5rem; border-radius:20px; font-size:0.7rem; margin-left:0.5rem;">Админ</span>
-                {% endif %}
+        <div class="user-main-info">
+            <div class="user-info">
+                <div class="user-name">
+                    {{ u.full_name|default:u.username }}
+                    {% if u.is_banned %}
+                        <span class="banned-badge">⛔ ЗАБАНЕН</span>
+                    {% endif %}
+                    {% if u.role == 'admin' %}
+                        <span class="admin-badge">Админ</span>
+                    {% endif %}
+                </div>
+                <div class="user-stats">
+                    @{{ u.username }} | Роль: {% if u.role == 'admin' %}Администратор{% else %}Пользователь{% endif %}
+                    | Турниров: {{ u.tournaments_count }} | Достижений: {{ u.achievements_count }}
+                </div>
+                <div class="user-stats">
+                    📧 {{ u.email|default:"Email не указан" }} | 📍 {{ u.city|default:"Город не указан" }}
+                </div>
             </div>
-            <div class="user-stats">
-                @{{ u.username }} | Роль: {% if u.role == 'admin' %}Администратор{% else %}Пользователь{% endif %}
-                | Турниров: {{ u.tournaments_count }} | Достижений: {{ u.achievements_count }}
-            </div>
-            <div class="user-stats">
-                📧 {{ u.email|default:"Email не указан" }} | 📍 {{ u.city|default:"Город не указан" }}
+            <div class="user-actions">
+                {% if u.role != 'admin' %}
+                    <form method="POST" action="{% url 'award_achievement' u.id %}" class="award-form">
+                        {% csrf_token %}
+                        <input type="text" name="name" placeholder="Название" required>
+                        <input type="text" name="description" placeholder="Описание" required>
+                        <button type="submit" class="btn btn-primary btn-small">🏆 Наградить</button>
+                    </form>
+
+                    {% if u.is_banned %}
+                        <a href="{% url 'unban_user' u.id %}" class="btn btn-primary btn-small">🔓 Разбанить</a>
+                    {% else %}
+                        <a href="{% url 'ban_user' u.id %}" class="btn btn-danger btn-small">⛔ Забанить</a>
+                    {% endif %}
+
+                    <a href="{% url 'delete_user' u.id %}" class="btn btn-danger btn-small" style="background:#660000;" onclick="return confirm('Точно удалить пользователя {{ u.username }}? Это действие необратимо!')">🗑️ Удалить</a>
+                {% endif %}
             </div>
         </div>
-        <div class="user-actions">
-            {% if u.role != 'admin' %}
-                <form method="POST" action="{% url 'award_achievement' u.id %}" class="award-form">
-                    {% csrf_token %}
-                    <input type="text" name="name" placeholder="Название" required>
-                    <input type="text" name="description" placeholder="Описание" required>
-                    <button type="submit" class="btn btn-primary btn-small">🏆 Наградить</button>
-                </form>
 
-                {% if u.is_banned %}
-                    <a href="{% url 'unban_user' u.id %}" class="btn btn-primary btn-small" style="background:#81c784;">🔓 Разбанить</a>
-                {% else %}
-                    <a href="{% url 'ban_user' u.id %}" class="btn btn-danger btn-small" style="background:#ff4444;">⛔ Забанить</a>
-                {% endif %}
-
-                <!-- КНОПКА УДАЛЕНИЯ -->
-                <a href="{% url 'delete_user' u.id %}" class="btn btn-danger btn-small" style="background:#660000;" onclick="return confirm('Точно удалить пользователя {{ u.username }}? Это действие необратимо!')">🗑️ Удалить</a>
-            {% endif %}
+        {% if u.role != 'admin' %}
+        <div class="achievements-section">
+            <div class="achievements-title">🏅 Достижения пользователя:</div>
+            <div class="achievements-list">
+                {% for achievement in u.achievements.all %}
+                <div class="achievement-item">
+                    <span class="achievement-name"><strong>{{ achievement.name }}</strong><br><small>{{ achievement.description }}</small></span>
+                    <span class="achievement-actions">
+                        <a href="{% url 'edit_achievement' achievement.id %}" class="edit-achieve" title="Редактировать">✏️</a>
+                        <a href="{% url 'delete_achievement' achievement.id %}" onclick="return confirm('Удалить достижение?')" title="Удалить">🗑️</a>
+                    </span>
+                </div>
+                {% empty %}
+                <div class="empty-achievements">Нет достижений</div>
+                {% endfor %}
+            </div>
         </div>
+        {% endif %}
     </div>
     {% empty %}
-    <div style="text-align:center; padding:3rem; color:#666;">Нет пользователей</div>
+    <div style="text-align:center; padding:3rem; color:#6c757d;">Нет пользователей</div>
     {% endfor %}
 </div>
 {% endblock %}

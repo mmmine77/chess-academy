@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils import timezone
 from .models import (
     User, Tournament, Achievement, Message, Trainer, Gallery, Lesson, ClubMeeting
 )
@@ -83,15 +84,33 @@ class ClubMeetingAdmin(admin.ModelAdmin):
 
     def participants_count(self, obj):
         return obj.participants.count()
+
     participants_count.short_description = 'Участников'
 
 
-# ========== ГАЛЕРЕЯ / НОВОСТИ ==========
+# ========== ГАЛЕРЕЯ / НОВОСТИ (С АВТО-ДАТОЙ) ==========
 @admin.register(Gallery)
 class GalleryAdmin(admin.ModelAdmin):
     list_display = ('title', 'event_date', 'uploaded_at', 'image_preview')
     list_filter = ('event_date',)
     search_fields = ('title', 'description')
+
+    def get_fieldsets(self, request, obj=None):
+        return (
+            (None, {
+                'fields': ('title', 'image', 'description')
+            }),
+            ('Дата события', {
+                'fields': ('event_date',),
+                'description': 'Если оставить пустым, будет установлена текущая дата'
+            }),
+        )
+
+    def save_model(self, request, obj, form, change):
+        # Автоматическая установка текущей даты, если поле пустое
+        if not obj.event_date:
+            obj.event_date = timezone.now().date()
+        super().save_model(request, obj, form, change)
 
     def image_preview(self, obj):
         if obj.image:

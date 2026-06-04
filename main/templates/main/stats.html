@@ -7,20 +7,21 @@
         margin: 0 auto;
     }
     .stats-header {
-        background: #1a1a1a;
+        background: white;
         padding: 1.5rem;
-        border-radius: 16px;
+        border-radius: 20px;
         margin-bottom: 2rem;
         text-align: center;
-        border: 1px solid #333;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .stats-header h1 {
-        color: #81c784;
+        color: #2c7da0;
         font-size: 2rem;
         margin-bottom: 0.5rem;
     }
     .stats-header p {
-        color: #b0b0b0;
+        color: #6c757d;
     }
     .stats-grid {
         display: grid;
@@ -29,24 +30,26 @@
         margin-bottom: 2rem;
     }
     .stat-card {
-        background: #1a1a1a;
-        border-radius: 16px;
+        background: white;
+        border-radius: 20px;
         padding: 1.5rem;
         text-align: center;
-        border: 1px solid #333;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         transition: 0.3s;
     }
     .stat-card:hover {
-        border-color: #81c784;
+        border-color: #2c7da0;
         transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
     .stat-number {
         font-size: 2.5rem;
         font-weight: bold;
-        color: #81c784;
+        color: #2c7da0;
     }
     .stat-label {
-        color: #b0b0b0;
+        color: #6c757d;
         margin-top: 0.5rem;
         font-size: 0.9rem;
     }
@@ -55,29 +58,35 @@
         margin-bottom: 0.5rem;
     }
     .banned-warning {
-        background: #ff444420;
-        border: 1px solid #ff4444;
-        border-radius: 8px;
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 12px;
         padding: 0.5rem 1rem;
         margin-top: 0.5rem;
         text-align: center;
-    }
-    .banned-count {
-        color: #ff8888;
+        color: #721c24;
     }
     .summary-card {
-        background: #1a1a1a;
-        border-radius: 16px;
+        background: white;
+        border-radius: 20px;
         padding: 1.5rem;
-        border: 1px solid #333;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         margin-top: 1rem;
     }
     .summary-title {
-        color: #81c784;
+        color: #2c7da0;
         font-size: 1.3rem;
         margin-bottom: 1rem;
-        border-bottom: 1px solid #404040;
+        border-bottom: 1px solid #e0e0e0;
         padding-bottom: 0.5rem;
+    }
+    .summary-card p {
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+    }
+    .summary-card strong {
+        color: #2c7da0;
     }
 </style>
 
@@ -118,22 +127,22 @@
     <div class="summary-card">
         <div class="summary-title">📈 Краткая сводка</div>
         <div style="padding: 1rem;">
-            <p style="color:#b0b0b0; margin-bottom: 0.5rem;">📌 Среднее количество участников на турнир:
-                <strong style="color:#81c784;">
+            <p>📌 Среднее количество участников на турнир:
+                <strong>
                     {% if total_tournaments > 0 %}
                         {% widthratio total_users total_tournaments 1 %}
                     {% else %}0{% endif %}
                 </strong>
             </p>
-            <p style="color:#b0b0b0; margin-bottom: 0.5rem;">📌 Среднее количество достижений на пользователя:
-                <strong style="color:#81c784;">
+            <p>📌 Среднее количество достижений на пользователя:
+                <strong>
                     {% if total_users > 0 %}
                         {% widthratio total_achievements total_users 1 %}
                     {% else %}0{% endif %}
                 </strong>
             </p>
-            <p style="color:#b0b0b0;">📌 Активность в чате:
-                <strong style="color:#81c784;">{{ total_messages }}</strong> сообщений
+            <p>📌 Активность в чате:
+                <strong>{{ total_messages }}</strong> сообщений
             </p>
         </div>
     </div>

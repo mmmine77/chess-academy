@@ -11,22 +11,23 @@
 
     .users-sidebar {
         width: 280px;
-        background: #1a1a1a;
-        border-radius: 16px;
-        border: 1px solid #333;
+        background: white;
+        border-radius: 20px;
+        border: 1px solid #e0e0e0;
         overflow-y: auto;
         flex-shrink: 0;
         display: flex;
         flex-direction: column;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .sidebar-header {
         padding: 1rem;
-        border-bottom: 1px solid #333;
-        color: #81c784;
+        border-bottom: 1px solid #e0e0e0;
+        color: #2c7da0;
         font-weight: bold;
         position: sticky;
         top: 0;
-        background: #1a1a1a;
+        background: white;
         z-index: 10;
     }
     .users-list {
@@ -38,23 +39,23 @@
         justify-content: space-between;
         align-items: center;
         padding: 0.8rem 1rem;
-        border-bottom: 1px solid #333;
+        border-bottom: 1px solid #e0e0e0;
         text-decoration: none;
         transition: 0.3s;
     }
     .sidebar-user:hover {
-        background: #2a2a2a;
+        background: #f8f9fa;
     }
     .sidebar-user.active {
-        background: #81c78420;
-        border-left: 3px solid #81c784;
+        background: #e3f2fd;
+        border-left: 3px solid #2c7da0;
     }
     .sidebar-user-name {
-        color: #e0e0e0;
+        color: #212529;
         font-size: 0.9rem;
     }
     .sidebar-unread {
-        background: #ff4444;
+        background: #dc3545;
         color: white;
         padding: 0.2rem 0.5rem;
         border-radius: 20px;
@@ -65,15 +66,18 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-        background: #1a1a1a;
-        border-radius: 16px;
-        border: 1px solid #333;
+        background: white;
+        border-radius: 20px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .chat-header {
         padding: 1rem;
-        border-bottom: 1px solid #333;
-        color: #81c784;
+        border-bottom: 1px solid #e0e0e0;
+        color: #2c7da0;
         font-weight: bold;
+        background: white;
+        border-radius: 20px 20px 0 0;
     }
     .messages-container {
         flex: 1;
@@ -81,65 +85,82 @@
         padding: 1rem;
         display: flex;
         flex-direction: column;
+        background: #f8f9fa;
     }
     .message {
         margin-bottom: 0.8rem;
         padding: 0.6rem 1rem;
-        border-radius: 16px;
+        border-radius: 18px;
         max-width: 70%;
         word-wrap: break-word;
     }
     .message-sent {
-        background: #81c784;
-        color: #1a1a1a;
+        background: #2c7da0;
+        color: white;
         align-self: flex-end;
         border-bottom-right-radius: 4px;
     }
     .message-received {
-        background: #2a2a2a;
-        color: #fff;
+        background: white;
+        color: #212529;
         align-self: flex-start;
+        border: 1px solid #e0e0e0;
         border-bottom-left-radius: 4px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
     .message-info {
-        font-size: 0.65rem;
+        font-size: 0.6rem;
         margin-bottom: 0.2rem;
-        opacity: 0.7;
+        opacity: 0.8;
     }
     .message-sent .message-info {
         text-align: right;
+        color: rgba(255,255,255,0.9);
+    }
+    .message-received .message-info {
+        color: #6c757d;
     }
     .delete-msg {
-        color: #ff4444;
+        color: #ffc107;
         text-decoration: none;
         margin-left: 8px;
         font-size: 0.7rem;
         cursor: pointer;
     }
+    .delete-msg:hover {
+        color: #dc3545;
+    }
     .send-form {
         padding: 1rem;
-        border-top: 1px solid #333;
+        border-top: 1px solid #e0e0e0;
+        background: white;
+        border-radius: 0 0 20px 20px;
     }
     .send-form textarea {
         width: 100%;
         padding: 0.7rem;
-        background: #2a2a2a;
-        border: 1px solid #404040;
-        border-radius: 8px;
-        color: #fff;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        color: #212529;
         resize: vertical;
         font-family: inherit;
+    }
+    .send-form textarea:focus {
+        outline: none;
+        border-color: #2c7da0;
+        box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
     }
     .send-form button {
         margin-top: 0.5rem;
     }
     .empty-chat {
         text-align: center;
-        color: #666;
+        color: #6c757d;
         padding: 2rem;
     }
     .typing-indicator {
-        color: #81c784;
+        color: #2c7da0;
         font-size: 0.8rem;
         padding: 0.5rem;
         font-style: italic;
@@ -157,7 +178,7 @@
             max-height: 250px;
             overflow-y: auto;
             margin-bottom: 0.5rem;
-            border-radius: 12px;
+            border-radius: 16px;
         }
         .chat-main {
             height: calc(100vh - 300px);

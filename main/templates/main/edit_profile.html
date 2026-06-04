@@ -5,31 +5,40 @@
     .edit-form {
         max-width: 600px;
         margin: 0 auto;
-        background: #1a1a1a;
+        background: white;
         padding: 2rem;
-        border-radius: 16px;
-        border: 1px solid #333;
+        border-radius: 24px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     }
     .edit-form h2 {
-        color: #81c784;
+        color: #2c7da0;
         margin-bottom: 1.5rem;
         text-align: center;
+        font-weight: 600;
     }
     .form-group {
         margin-bottom: 1rem;
     }
     .form-group label {
         display: block;
-        color: #b0b0b0;
+        color: #495057;
         margin-bottom: 0.5rem;
+        font-weight: 500;
     }
     .form-group input, .form-group textarea {
         width: 100%;
         padding: 0.75rem;
-        background: #2a2a2a;
-        border: 2px solid #404040;
-        border-radius: 8px;
-        color: #fff;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        color: #212529;
+        transition: all 0.2s;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+        outline: none;
+        border-color: #2c7da0;
+        box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
     }
     .form-group textarea {
         resize: vertical;
@@ -37,12 +46,36 @@
     }
     .btn-block {
         width: 100%;
+        padding: 0.75rem;
+        border-radius: 30px;
+        font-weight: 600;
     }
     .btn-cancel {
         display: block;
         text-align: center;
         margin-top: 1rem;
         text-decoration: none;
+        padding: 0.75rem;
+        border-radius: 30px;
+    }
+    .btn-primary {
+        background: #2c7da0;
+        color: white;
+        border: none;
+        transition: all 0.2s;
+    }
+    .btn-primary:hover {
+        background: #1f5e7a;
+        transform: translateY(-1px);
+    }
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+        border: none;
+        transition: all 0.2s;
+    }
+    .btn-danger:hover {
+        background: #bb2d3b;
     }
 </style>
 

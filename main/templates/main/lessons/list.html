@@ -11,73 +11,83 @@
         gap: 1rem;
     }
     .page-header h1 {
-        color: #81c784;
+        color: #2c7da0;
+        font-size: 1.8rem;
     }
     .lessons-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-        gap: 1rem;
+        gap: 1.2rem;
     }
     .lesson-card {
-        background: #1a1a1a;
-        border-radius: 12px;
-        padding: 1rem;
-        border: 1px solid #333;
+        background: white;
+        border-radius: 16px;
+        padding: 1.2rem;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         transition: all 0.3s ease;
     }
     .lesson-card:hover {
         transform: translateY(-3px);
-        border-color: #81c784;
+        border-color: #2c7da0;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
     .lesson-name {
-        font-size: 1.1rem;
+        font-size: 1.15rem;
         font-weight: bold;
-        color: #81c784;
+        color: #2c7da0;
         margin-bottom: 0.5rem;
     }
     .lesson-description {
-        color: #b0b0b0;
+        color: #6c757d;
         font-size: 0.85rem;
         margin-bottom: 0.8rem;
         line-height: 1.4;
     }
     .lesson-detail {
         margin-bottom: 0.3rem;
-        color: #b0b0b0;
+        color: #6c757d;
         font-size: 0.85rem;
     }
     .lesson-detail strong {
-        color: #e0e0e0;
+        color: #212529;
         width: 45px;
         display: inline-block;
     }
     .btn-detail {
-        background: #81c784;
-        color: #000;
+        background: #2c7da0;
+        color: white;
         padding: 0.4rem 1rem;
-        border-radius: 6px;
+        border-radius: 30px;
         text-decoration: none;
         display: inline-block;
         font-size: 0.8rem;
         margin-top: 0.5rem;
+        transition: all 0.2s;
     }
     .btn-detail:hover {
-        background: #6bb86e;
+        background: #1f5e7a;
+        transform: translateY(-1px);
     }
     .empty-message {
         text-align: center;
         padding: 3rem;
-        color: #666;
+        color: #6c757d;
+        background: white;
+        border-radius: 16px;
+        border: 1px solid #e0e0e0;
     }
     .btn-create {
-        background: #81c784;
-        color: #000;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
+        background: #2c7da0;
+        color: white;
+        padding: 0.5rem 1.2rem;
+        border-radius: 30px;
         text-decoration: none;
+        transition: all 0.2s;
     }
     .btn-create:hover {
-        background: #6bb86e;
+        background: #1f5e7a;
+        transform: translateY(-1px);
     }
     @media (max-width: 768px) {
         .lessons-grid {

@@ -11,17 +11,23 @@
         flex-wrap: wrap;
     }
     .tab {
-        padding: 0.75rem 2rem;
-        background: #1a1a1a;
-        border: 1px solid #333;
-        color: #fff;
+        padding: 0.6rem 1.5rem;
+        background: white;
+        border: 1px solid #dee2e6;
+        color: #495057;
         text-decoration: none;
-        border-radius: 4px;
+        border-radius: 40px;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    .tab:hover {
+        background: #f0f0f0;
+        border-color: #2c7da0;
     }
     .tab.active {
-        background: #81c784;
-        color: #1a1a1a;
-        border-color: #81c784;
+        background: #2c7da0;
+        color: white;
+        border-color: #2c7da0;
     }
     .tournaments-grid {
         display: grid;
@@ -29,97 +35,142 @@
         gap: 1.5rem;
     }
     .tournament-card {
-        background: #1a1a1a;
-        border-radius: 12px;
-        padding: 1.5rem;
-        border: 1px solid #333;
+        background: white;
+        border-radius: 16px;
+        padding: 1.2rem;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
     }
     .tournament-card:hover {
-        border-color: #81c784;
+        transform: translateY(-3px);
+        border-color: #2c7da0;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
     .tournament-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem;
     }
     .tournament-type {
         padding: 0.25rem 0.75rem;
-        background: #333;
-        color: #81c784;
-        border-radius: 4px;
-        font-size: 0.8rem;
+        background: #e3f2fd;
+        color: #2c7da0;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
     }
     .tournament-name {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         font-weight: bold;
-        color: #fff;
-        margin-bottom: 1rem;
+        color: #212529;
+        margin-bottom: 0.8rem;
     }
     .tournament-info {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
+        gap: 0.6rem;
         margin-bottom: 1rem;
-        color: #b0b0b0;
+        color: #6c757d;
+        font-size: 0.85rem;
     }
     .info-item {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.4rem;
     }
     .participants-count {
-        color: #81c784;
-        font-weight: 500;
+        color: #2c7da0;
+        font-weight: 600;
     }
     .btn-register {
         width: 100%;
-        padding: 0.75rem;
-        background: #81c784;
-        color: #1a1a1a;
+        padding: 0.6rem;
+        background: #2c7da0;
+        color: white;
         border: none;
-        border-radius: 4px;
+        border-radius: 10px;
         font-weight: 600;
         text-align: center;
         display: block;
         text-decoration: none;
+        transition: all 0.2s;
+    }
+    .btn-register:hover {
+        background: #1f5e7a;
+        transform: translateY(-1px);
     }
     .btn-unregister {
-        background: #ff4444;
-        color: white;
+        background: #dc3545;
+    }
+    .btn-unregister:hover {
+        background: #bb2d3b;
     }
     .btn-warning {
-        background: #ff9800;
-        color: #1a1a1a;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
+        background: #ffc107;
+        color: #212529;
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
         text-decoration: none;
         display: inline-block;
+        font-size: 0.8rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    .btn-warning:hover {
+        background: #e0a800;
+    }
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 0.8rem;
+        font-weight: 500;
+        margin-left: 0.5rem;
+        transition: all 0.2s;
+    }
+    .btn-danger:hover {
+        background: #bb2d3b;
     }
     .admin-actions {
         margin-bottom: 2rem;
         padding: 1rem;
-        background: #2a2a2a;
-        border-radius: 8px;
+        background: #f8f9fa;
+        border-radius: 12px;
         display: flex;
         gap: 1rem;
         align-items: center;
         flex-wrap: wrap;
+        border: 1px solid #e0e0e0;
     }
     .empty-tournaments {
         text-align: center;
         padding: 3rem;
-        color: #666;
+        color: #6c757d;
+        background: white;
+        border-radius: 16px;
+        border: 1px solid #e0e0e0;
     }
     .participants-btn {
-        background: #81c784;
-        color: #1a1a1a;
+        background: #f8f9fa;
+        color: #2c7da0;
         padding: 0.5rem;
         text-align: center;
         display: block;
         text-decoration: none;
-        border-radius: 4px;
+        border-radius: 10px;
         margin-top: 0.5rem;
+        border: 1px solid #dee2e6;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+    }
+    .participants-btn:hover {
+        background: #e3f2fd;
+        border-color: #2c7da0;
     }
 </style>
 
@@ -128,7 +179,7 @@
     <a href="{% url 'tournament_create' %}" class="btn btn-primary">➕ Создать турнир</a>
     <a href="{% url 'users_list' %}" class="btn btn-primary">👥 Управление пользователями</a>
     <a href="{% url 'stats' %}" class="btn btn-primary">📊 Статистика</a>
-    <span style="color:#ff9800;">🔧 Режим администратора</span>
+    <span style="color:#2c7da0; font-weight:500;">🔧 Режим администратора</span>
 </div>
 {% endif %}
 
@@ -146,7 +197,7 @@
             {% if user.is_authenticated and user.role == 'admin' %}
             <div>
                 <a href="{% url 'tournament_edit' tournament.id %}" class="btn-warning">✏️</a>
-                <a href="{% url 'tournament_delete' tournament.id %}" class="btn-danger" style="padding:0.5rem 1rem; margin-left:0.5rem; border-radius:4px; text-decoration:none;">🗑️</a>
+                <a href="{% url 'tournament_delete' tournament.id %}" class="btn-danger">🗑️</a>
             </div>
             {% endif %}
         </div>
@@ -165,7 +216,7 @@
             {% if tournament in user.tournaments.all %}
                 <a href="{% url 'tournament_unregister' tournament.id %}" class="btn-register btn-unregister">❌ Отменить запись</a>
             {% else %}
-                <a href="{% url 'tournament_register' tournament.id %}" class="btn-register" {% if tournament.is_full %}style="background:#333; cursor:not-allowed;"{% endif %}>{% if tournament.is_full %}Мест нет{% else %}✅ Записаться на турнир{% endif %}</a>
+                <a href="{% url 'tournament_register' tournament.id %}" class="btn-register" {% if tournament.is_full %}style="background:#adb5bd; cursor:not-allowed;"{% endif %}>{% if tournament.is_full %}Мест нет{% else %}✅ Записаться на турнир{% endif %}</a>
             {% endif %}
 
         {% else %}

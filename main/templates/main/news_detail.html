@@ -1,0 +1,53 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    .news-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 2rem;
+        border-radius: 24px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .news-container h1 {
+        color: #2c7da0;
+        margin-bottom: 0.5rem;
+    }
+    .news-date {
+        color: #6c757d;
+        margin-bottom: 1rem;
+        font-size: 0.85rem;
+    }
+    .news-image {
+        max-width: 100%;
+        border-radius: 16px;
+        margin: 1rem 0;
+    }
+    .news-content {
+        color: #495057;
+        line-height: 1.7;
+        font-size: 1rem;
+    }
+    .btn-back {
+        display: inline-block;
+        margin-top: 1.5rem;
+        background: #2c7da0;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+        text-decoration: none;
+    }
+</style>
+
+<div class="news-container">
+    <h1>{{ news.title }}</h1>
+    <div class="news-date">{{ news.event_date|date:"d.m.Y" }}</div>
+    {% if news.image %}
+        <img src="{{ news.image.url }}" class="news-image" alt="{{ news.title }}">
+    {% endif %}
+    <div class="news-content">{{ news.description|linebreaks }}</div>
+    <a href="{% url 'gallery' %}" class="btn-back">← Назад к новостям</a>
+</div>
+{% endblock %}
