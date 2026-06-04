@@ -7,6 +7,7 @@ from django.db.models import Count, Q, OuterRef, Subquery
 from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 import json
 import os
@@ -574,6 +575,82 @@ def gallery_delete(request, id):
     messages.success(request, 'Новость удалена!')
     return redirect('gallery')
 
+
+# ========== КАСТОМНОЕ СОЗДАНИЕ НОВОСТИ ==========
+@login_required
+@user_passes_test(is_admin)
+def create_news(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        image = request.FILES.get('image')
+
+        if title:
+            news = Gallery.objects.create(
+                title=title,
+                description=description,
+                image=image,
+                event_date=timezone.now().date()
+            )
+            messages.success(request, f'Новость "{news.title}" создана!')
+            return redirect('gallery')
+        else:
+            messages.error(request, 'Заполните заголовок')
+    return render(request, 'main/create_news.html')
+
+
+# ========== НОВЫЕ ФУНКЦИИ ДЛЯ НОВОСТЕЙ (КАСТОМНЫЕ) ==========
+@login_required
+@user_passes_test(is_admin)
+def edit_news(request, news_id):
+    news = get_object_or_404(Gallery, id=news_id)
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        event_date = request.POST.get('event_date')
+        image = request.FILES.get('image')
+
+        if title:
+            news.title = title
+            news.description = description
+            if event_date:
+                news.event_date = event_date
+            if image:
+                news.image = image
+            news.save()
+            messages.success(request, 'Новость обновлена!')
+            return redirect('gallery')
+    return render(request, 'main/edit_news.html', {'news': news})
+
+
+@login_required
+@user_passes_test(is_admin)
+def delete_news(request, news_id):
+    news = get_object_or_404(Gallery, id=news_id)
+    news.delete()
+    messages.success(request, 'Новость удалена!')
+    return redirect('gallery')
+
+
+@login_required
+def news_detail(request, news_id):
+    news = get_object_or_404(Gallery, id=news_id)
+    return render(request, 'main/news_detail.html', {'news': news})
+
+
+@login_required
+@user_passes_test(is_admin)
+def delete_news(request, news_id):
+    news = get_object_or_404(Gallery, id=news_id)
+    news.delete()
+    messages.success(request, 'Новость удалена!')
+    return redirect('gallery')
+
+
+@login_required
+def news_detail(request, news_id):
+    news = get_object_or_404(Gallery, id=news_id)
+    return render(request, 'main/news_detail.html', {'news': news})
 
 # ========== ЧАТ (AJAX ВЕРСИЯ - БЕЗ ПЕРЕЗАГРУЗКИ) ==========
 

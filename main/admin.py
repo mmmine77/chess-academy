@@ -88,26 +88,16 @@ class ClubMeetingAdmin(admin.ModelAdmin):
     participants_count.short_description = 'Участников'
 
 
-# ========== ГАЛЕРЕЯ / НОВОСТИ (С АВТО-ДАТОЙ) ==========
+# ========== ГАЛЕРЕЯ / НОВОСТИ ==========
 @admin.register(Gallery)
 class GalleryAdmin(admin.ModelAdmin):
     list_display = ('title', 'event_date', 'uploaded_at', 'image_preview')
     list_filter = ('event_date',)
     search_fields = ('title', 'description')
-
-    def get_fieldsets(self, request, obj=None):
-        return (
-            (None, {
-                'fields': ('title', 'image', 'description')
-            }),
-            ('Дата события', {
-                'fields': ('event_date',),
-                'description': 'Если оставить пустым, будет установлена текущая дата'
-            }),
-        )
+    exclude = ('event_date',)  # ← СКРЫВАЕМ ПОЛЕ ИЗ ФОРМЫ
 
     def save_model(self, request, obj, form, change):
-        # Автоматическая установка текущей даты, если поле пустое
+        # При создании новости ставим текущую дату
         if not obj.event_date:
             obj.event_date = timezone.now().date()
         super().save_model(request, obj, form, change)

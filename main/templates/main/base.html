@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Шахматная академия | {% block title %}Главная{% endblock %}</title>
+    <title>Разноцветные слоны | {% block title %}Главная{% endblock %}</title>
     <style>
         * {
             margin: 0;
@@ -561,7 +561,7 @@
 </head>
 <body>
     <div class="navbar">
-        <div class="logo" onclick="window.location.href='/'">♜ Шахматная академия</div>
+        <div class="logo" onclick="window.location.href='/'">♜ Разноцветные слоны</div>
         <button class="burger" id="burgerBtn">☰</button>
         <div class="nav-links" id="navLinks">
             <a href="/">Главная</a>
@@ -606,7 +606,7 @@
                 <a href="{% url 'trainer_create' %}" class="btn btn-primary btn-sm">👨‍🏫 Тренер</a>
                 <a href="{% url 'lesson_create' %}" class="btn btn-primary btn-sm">📚 Урок</a>
                 <a href="{% url 'meeting_create' %}" class="btn btn-primary btn-sm">🤝 Встреча</a>
-                <a href="/admin/main/gallery/add/" class="btn btn-primary btn-sm">📰 Новости</a>
+                <a href="{% url 'create_news' %}" class="btn btn-primary btn-sm">📰 Новости</a>
             </div>
         </div>
         {% endif %}
@@ -617,7 +617,7 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-col">
-                <h3>Шахматная академия</h3>
+                <h3>Разноцветные слоны</h3>
                 <p>Обучение шахматам онлайн и офлайн. Турниры, профессиональные тренеры, современные методики обучения.</p>
             </div>
             <div class="footer-col">
@@ -633,7 +633,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© {% now "Y" %} Шахматная академия. Все права защищены.</p>
+            <p>© {% now "Y" %} Разноцветные слоны. Все права защищены.</p>
         </div>
     </footer>
 
