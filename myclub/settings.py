@@ -8,9 +8,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-key-for-demo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True  # на сервере Beget потом поменяешь на False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']  # на сервере потом укажешь конкретный домен
 
 # Application definition
 INSTALLED_APPS = [
@@ -38,7 +38,7 @@ ROOT_URLCONF = 'myclub.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # ЭТА СТРОЧКА ДОЛЖНА БЫТЬ
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -57,7 +57,7 @@ WSGI_APPLICATION = 'myclub.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # ← ЛОКАЛЬНЫЙ ПУТЬ
     }
 }
 
@@ -86,10 +86,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # ← ЛОКАЛЬНЫЙ ПУТЬ
 
 # Media files (uploaded by users)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -101,5 +102,3 @@ AUTH_USER_MODEL = 'main.User'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-TIME_ZONE = 'Europe/Moscow'
-USE_TZ = True

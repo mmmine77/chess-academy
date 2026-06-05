@@ -5,18 +5,23 @@
     .confirm-card {
         max-width: 500px;
         margin: 50px auto;
-        background: #1a1a1a;
+        background: white;
         padding: 2rem;
-        border-radius: 16px;
-        border: 1px solid #333;
+        border-radius: 24px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         text-align: center;
     }
     .confirm-card h2 {
-        color: #ff4444;
+        color: #dc3545;
         margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    .confirm-card p {
+        color: #495057;
     }
     .confirm-card .tournament-name {
-        color: #81c784;
+        color: #2c7da0;
         font-size: 1.2rem;
         font-weight: bold;
         margin: 1rem 0;
@@ -27,19 +32,47 @@
         justify-content: center;
         margin-top: 1.5rem;
     }
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    .btn-danger:hover {
+        background: #bb2d3b;
+        transform: translateY(-1px);
+    }
+    .btn-primary {
+        background: #2c7da0;
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border: none;
+        border-radius: 30px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.2s;
+    }
+    .btn-primary:hover {
+        background: #1f5e7a;
+        transform: translateY(-1px);
+    }
 </style>
 
 <div class="confirm-card">
     <h2>⚠️ Подтверждение удаления</h2>
     <p>Вы уверены, что хотите удалить турнир?</p>
     <div class="tournament-name">"{{ tournament.name }}"</div>
-    <p style="color:#ff4444;">Это действие нельзя отменить!</p>
+    <p style="color:#dc3545;">Это действие нельзя отменить!</p>
     <div class="buttons">
         <form method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Да, удалить</button>
+            <button type="submit" class="btn-danger">Да, удалить</button>
         </form>
-        <a href="/" class="btn btn-primary">Отмена</a>
+        <a href="/" class="btn-primary">Отмена</a>
     </div>
 </div>
 {% endblock %}

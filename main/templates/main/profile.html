@@ -51,13 +51,22 @@
     .info-label {
         color: #6c757d;
         font-size: 0.85rem;
+        font-weight: 500;
     }
     .info-value {
         color: #212529;
-        padding: 0.5rem;
+        padding: 0.6rem;
         background: white;
-        border-radius: 8px;
+        border-radius: 12px;
         border: 1px solid #e0e0e0;
+        word-break: break-word;
+        white-space: normal;
+        overflow-wrap: break-word;
+        line-height: 1.4;
+    }
+    .info-item:last-child .info-value {
+        max-height: 120px;
+        overflow-y: auto;
     }
     .achievements-grid {
         display: grid;
@@ -117,36 +126,6 @@
         margin-left: 0.5rem;
         font-weight: 500;
     }
-    .admin-actions-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1rem;
-        margin-top: 1rem;
-    }
-    .admin-action-card {
-        background: white;
-        padding: 1rem;
-        border-radius: 12px;
-        text-align: center;
-        border: 1px solid #e0e0e0;
-        transition: 0.3s;
-    }
-    .admin-action-card:hover {
-        border-color: #2c7da0;
-        transform: translateY(-3px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .admin-action-card a {
-        color: #2c7da0;
-        text-decoration: none;
-        font-size: 1rem;
-        font-weight: bold;
-    }
-    .admin-action-card p {
-        color: #6c757d;
-        font-size: 0.8rem;
-        margin-top: 0.5rem;
-    }
     .awarded-by {
         font-size: 0.7rem;
         color: #ffc107;
@@ -199,6 +178,66 @@
     .btn-danger:hover {
         background: #bb2d3b;
     }
+
+    @media (max-width: 768px) {
+        .profile-card {
+            padding: 1rem;
+        }
+        .profile-title h1 {
+            font-size: 1.5rem;
+        }
+        .info-grid {
+            grid-template-columns: 1fr !important;
+            gap: 0.8rem !important;
+        }
+        .info-value {
+            font-size: 0.85rem;
+            padding: 0.5rem;
+        }
+        .info-label {
+            font-size: 0.75rem;
+        }
+        .info-item:last-child .info-value {
+            max-height: 100px;
+        }
+        .section-title {
+            font-size: 1rem;
+        }
+        .profile-section {
+            padding: 1rem;
+        }
+        .achievements-grid {
+            grid-template-columns: 1fr !important;
+        }
+        .tournaments-list li {
+            flex-direction: column;
+            text-align: center;
+        }
+        .btn-primary, .btn-danger {
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .profile-card {
+            padding: 0.8rem;
+        }
+        .info-value {
+            font-size: 0.8rem;
+            padding: 0.4rem;
+        }
+        .info-item:last-child .info-value {
+            max-height: 80px;
+        }
+    }
+
+    /* ПРИНУДИТЕЛЬНОЕ СКРЫТИЕ ПАНЕЛИ АДМИНИСТРАТОРА */
+    .admin-actions-grid,
+    .admin-action-card,
+    .profile-section .admin-actions-grid {
+        display: none !important;
+    }
 </style>
 
 <div class="profile-card">
@@ -231,37 +270,12 @@
             <div class="info-item"><span class="info-label">Email</span><span class="info-value">{{ user.email|default:"Не указан" }}</span></div>
             <div class="info-item"><span class="info-label">Город</span><span class="info-value">{{ user.city|default:"Не указан" }}</span></div>
             <div class="info-item"><span class="info-label">Телефон</span><span class="info-value">{{ user.phone|default:"Не указан" }}</span></div>
-            <div class="info-item"><span class="info-label">О себе</span><span class="info-value">{{ user.bio|default:"Не указано" }}</span></div>
+            <div class="info-item"><span class="info-label">О себе</span><span class="info-value">{{ user.bio|default:"Не указано"|linebreaksbr }}</span></div>
         </div>
         <div class="action-buttons">
             <a href="{% url 'logout' %}" class="logout-link" onclick="return confirm('Выйти из аккаунта?')">Выйти из аккаунта</a>
         </div>
     </div>
-
-    {# ========== ДЛЯ АДМИНИСТРАТОРА ========== #}
-    {% if user.role == 'admin' %}
-    <div class="profile-section">
-        <div class="section-title">Панель управления</div>
-        <div class="admin-actions-grid">
-            <div class="admin-action-card">
-                <a href="{% url 'tournaments' %}">Управление турнирами</a>
-                <p>Создание, редактирование, удаление турниров</p>
-            </div>
-            <div class="admin-action-card">
-                <a href="{% url 'users_list' %}">Управление пользователями</a>
-                <p>Просмотр всех пользователей, награждение, бан/разбан</p>
-            </div>
-            <div class="admin-action-card">
-                <a href="{% url 'stats' %}">Статистика сайта</a>
-                <p>Общая статистика и аналитика</p>
-            </div>
-            <div class="admin-action-card">
-                <a href="{% url 'chat' %}">Чат с пользователями</a>
-                <p>Ответы на вопросы пользователей</p>
-            </div>
-        </div>
-    </div>
-    {% endif %}
 
     {# ========== ДЛЯ ОБЫЧНЫХ ПОЛЬЗОВАТЕЛЕЙ ========== #}
     {% if user.role != 'admin' and not user.is_banned %}

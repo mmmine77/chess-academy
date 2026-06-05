@@ -5,27 +5,30 @@
     .detail-container {
         max-width: 700px;
         margin: 0 auto;
-        background: #1a1a1a;
+        background: white;
         padding: 2rem;
-        border-radius: 16px;
-        border: 1px solid #333;
+        border-radius: 24px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
     }
     .detail-container h1 {
-        color: #81c784;
+        color: #2c7da0;
         margin-bottom: 1rem;
+        font-weight: 600;
     }
     .detail-info {
         margin: 1.5rem 0;
     }
     .detail-info p {
         margin-bottom: 0.8rem;
-        color: #b0b0b0;
+        color: #495057;
         font-size: 1rem;
     }
     .detail-info strong {
-        color: #e0e0e0;
+        color: #212529;
         width: 80px;
         display: inline-block;
+        font-weight: 600;
     }
     .button-group {
         display: flex;
@@ -33,29 +36,61 @@
         margin-top: 2rem;
         flex-wrap: wrap;
     }
-    .btn-back, .btn-edit, .btn-delete {
+    .btn-back, .btn-edit, .btn-delete, .btn-register {
         padding: 0.5rem 1.5rem;
-        border-radius: 8px;
+        border-radius: 30px;
         text-decoration: none;
         display: inline-block;
+        font-weight: 500;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
     }
     .btn-back {
-        background: #81c784;
-        color: #000;
+        background: #2c7da0;
+        color: white;
+    }
+    .btn-back:hover {
+        background: #1f5e7a;
+        transform: translateY(-1px);
     }
     .btn-edit {
-        background: #ff9800;
-        color: #000;
+        background: #ffc107;
+        color: #212529;
+    }
+    .btn-edit:hover {
+        background: #e0a800;
+        transform: translateY(-1px);
     }
     .btn-delete {
-        background: #ff4444;
-        color: #fff;
+        background: #dc3545;
+        color: white;
+    }
+    .btn-delete:hover {
+        background: #bb2d3b;
+        transform: translateY(-1px);
+    }
+    .btn-register {
+        background: #28a745;
+        color: white;
+    }
+    .btn-register:hover {
+        background: #1e7e34;
+        transform: translateY(-1px);
+    }
+    .btn-disabled {
+        background: #6c757d;
+        color: white;
+        cursor: not-allowed;
+        padding: 0.5rem 1.5rem;
+        border-radius: 30px;
+        border: none;
     }
     @media (max-width: 768px) {
         .button-group {
             flex-direction: column;
         }
-        .btn-back, .btn-edit, .btn-delete {
+        .btn-back, .btn-edit, .btn-delete, .btn-register, .btn-disabled {
             text-align: center;
         }
     }
@@ -80,9 +115,9 @@
             <a href="{% url 'meeting_delete' meeting.id %}" class="btn-delete" onclick="return confirm('Удалить встречу?')">Удалить</a>
         {% elif user.is_authenticated %}
             {% if user in meeting.participants.all %}
-                <button class="btn-delete" disabled>Вы уже записаны</button>
+                <button class="btn-disabled" disabled>✅ Вы уже записаны</button>
             {% else %}
-                <a href="{% url 'meeting_register' meeting.id %}" class="btn-edit">Записаться</a>
+                <a href="{% url 'meeting_register' meeting.id %}" class="btn-register">📝 Записаться</a>
             {% endif %}
         {% endif %}
     </div>
